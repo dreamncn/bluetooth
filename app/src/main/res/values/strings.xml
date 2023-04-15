@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">BluetoothDebug</string>
+    <string name="active_error">Plugin not activated.</string>
+    <string name="none_data" translatable="false">None</string>
+    <string name="select_bluetooth">List of Bluetooth</string>
+    <string name="bluetooth_data">Bluetooth data</string>
+    <string name="mac_data">Mac address</string>
+    <string name="broadcast_data">Broadcast data</string>
+    <string name="signal">Signal strength</string>
+    <string name="use_mock">Enable simulation</string>
+    <string name="server_data">Webdav data</string>
+    <string name="as_sender">As the sender</string>
+    <string name="webdav_data">Webdav service provider</string>
+    <string name="save_webdav">Save</string>
+    <string name="webdav_username">Username</string>
+    <string name="webdav_password">Password</string>
+    <string name="nav_about">About</string>
+    <string name="nav_setting">Setting</string>
+    <string name="choose_theme">Choose A Theme</string>
+    <string name="about_view_source_code"><![CDATA[View source code at %s]]></string>
+    <string name="setting_lang">Languages</string>
+    <string name="setting_value_lang" translatable="false">English</string>
+    <string name="setting_use_system_theme">Use system theme color</string>
+    <string name="setting_use_dark_theme">Dark themes use pure black</string>
+    <string name="setting_skin">Appearance</string>
+    <string name="setting_theme">Theme</string>
+    <string name="setting_dark_theme_off">Always off</string>
+    <string name="setting_dark_theme">Dark theme</string>
+    <string name="setting_translation">Translation contribution</string>
+    <string name="setting_help_translation">Help us translate bluetooth debug into your language</string>
+    <string name="setting_title">Settings</string>
+    <string name="setting_network">Network</string>
+    <string name="setting_dns">DNS over HTTPS</string>
+    <string name="setting_dns_desc">Workaround DNS poisoning in some nations</string>
+    <string name="lang_follow_system">Follow system</string>
+    <string name="setting_privacy">Privacy</string>
+    <string name="setting_analysis">Anonymous analysis</string>
+    <string name="setting_analysis_desc">Use Tencent Bugly to send crash data to us</string>
+    <string name="translation_url">https://github.com/dreamncn/bluetooth</string>
+    <string name="ok">OK</string>
+    <string name="dialog_cannot_open_browser_title">Can\\\'t start browser</string>
+    <string name="toast_copied_to_clipboard_with_text"><![CDATA[<b>%s</b> has been copied to clipboard.]]></string>
+    <string name="close">Close</string>
+    <string name="default_theme">Default Theme</string>
+    <string name="always_off">Always off</string>
+    <string name="always_on">Always on</string>
+</resources>

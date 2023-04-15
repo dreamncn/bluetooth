@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/toolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:menu="@menu/main_menu"
+            app:title="@string/app_name" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/colorBackground"
+            android:orientation="vertical"
+            android:padding="@dimen/padding">
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding"
+                app:cardCornerRadius="@dimen/radius">
+
+                <RelativeLayout
+                    android:id="@+id/active"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="?attr/colorErrorContainer"
+                    android:padding="@dimen/state_padding">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="@dimen/image_size"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/border_side"
+                        android:src="@drawable/ic_error"
+                        app:tint="?colorOnErrorContainer" />
+
+                    <TextView
+                        android:id="@+id/msg_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/border_side"
+                        android:layout_marginEnd="@dimen/border_side"
+                        android:layout_toEndOf="@+id/imageView"
+                        android:text="@string/active_error"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="?colorOnErrorContainer"
+                        tools:ignore="RelativeOverlap" />
+
+
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding"
+                app:cardCornerRadius="@dimen/radius">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:padding="@dimen/padding">
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/bluetooth_data"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/select_bluetooth"
+                            tools:ignore="RelativeOverlap" />
+
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding">
+
+                        <TextView
+                            style="@style/TextViewLine"
+                            android:text="@string/mac_data" />
+
+                        <TextView
+                            android:id="@+id/mac_label"
+                            style="@style/TextViewLineSub"
+                            android:text="@string/none_data" />
+
+                        <TextView
+                            style="@style/TextViewLine"
+                            android:text="@string/broadcast_data" />
+
+                        <TextView
+                            android:id="@+id/broadcast_label"
+                            style="@style/TextViewLineSub"
+                            android:text="@string/none_data" />
+
+                        <TextView
+                            style="@style/TextViewLine"
+                            android:text="@string/signal" />
+
+                        <TextView
+                            android:id="@+id/signal_label"
+                            style="@style/TextViewLineSub"
+                            android:text="@string/none_data" />
+
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/switch_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/padding"
+                            android:text="@string/use_mock"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textStyle="bold"
+                            tools:ignore="RelativeOverlap" />
+
+                        <Switch
+                            android:id="@+id/switch_button"
+                            android:layout_width="@dimen/switch_width"
+                            android:layout_height="@dimen/switch_width"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding"
+                app:cardMaxElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding">
+
+                        <TextView
+                            android:id="@+id/server_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/server_data"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textStyle="bold" />
+
+                        <Switch
+                            android:id="@+id/server_sender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/switch_width"
+                            android:layout_alignParentEnd="true"
+
+                            android:text="@string/as_sender"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding">
+
+                        <TextView
+                            style="@style/TextViewLine"
+                            android:text="@string/webdav_data" />
+
+                        <TextView
+                            android:id="@+id/webdav_label"
+                            style="@style/TextViewLineSub"
+                            android:paddingBottom="@dimen/padding"
+                            android:text="@string/none_data" />
+
+                        <TextView
+                            style="@style/TextViewLine"
+                            android:text="@string/webdav_username" />
+
+                        <TextView
+                            android:id="@+id/username_label"
+                            style="@style/TextViewLineSub"
+                            android:text="@string/none_data" />
+
+                        <TextView
+                            style="@style/TextViewLine"
+                            android:text="@string/webdav_password" />
+
+                        <TextView
+                            android:id="@+id/password_label"
+                            style="@style/TextViewLineSub"
+                            android:text="@string/none_data" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+
+
+                            <Button
+                                android:id="@+id/test_webdav"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/save_webdav"
+                                tools:ignore="RelativeOverlap" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">蓝牙调试</string>
+    <string name="active_error">插件未激活</string>
+    <string name="select_bluetooth">蓝牙列表</string>
+    <string name="bluetooth_data">蓝牙数据</string>
+    <string name="mac_data">Mac地址</string>
+    <string name="broadcast_data">广播地址</string>
+    <string name="signal">信号强度</string>
+    <string name="use_mock">启用模拟</string>
+    <string name="server_data">Webdav数据</string>
+    <string name="as_sender">作为发送端</string>
+    <string name="webdav_data">Webdav服务提供商</string>
+    <string name="save_webdav">保存</string>
+    <string name="webdav_username">用户名</string>
+    <string name="webdav_password">密码</string>
+    <string name="nav_about">关于</string>
+    <string name="nav_setting">设置</string>
+    <string name="choose_theme">选择一个主题</string>
+    <string name="about_view_source_code"><![CDATA[在 %s 查看源码]]></string>
+    <string name="setting_lang">语言</string>
+    <string name="setting_use_system_theme">使用系统颜色</string>
+    <string name="setting_use_dark_theme">深色模式使用纯黑色</string>
+    <string name="setting_skin">外观</string>
+    <string name="setting_theme">主题</string>
+    <string name="setting_dark_theme_off">总是关闭</string>
+    <string name="setting_dark_theme">深色主题</string>
+    <string name="setting_translation">贡献翻译</string>
+    <string name="setting_help_translation">帮助我们将蓝牙调试翻译成你的语言</string>
+    <string name="setting_title">"设置 "</string>
+    <string name="setting_network">网络</string>
+    <string name="setting_dns">安全DNS</string>
+    <string name="setting_dns_desc">解决某些国家的DNS投毒问题</string>
+    <string name="lang_follow_system">跟随系统</string>
+</resources>
