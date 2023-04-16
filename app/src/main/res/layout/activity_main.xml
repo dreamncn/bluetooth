@@ -185,6 +185,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding"
+                            android:layout_toStartOf="@+id/search"
                             android:text="@string/bluetooth_data"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="?attr/colorOnSurface"
@@ -266,20 +268,20 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding"
+                            android:layout_toStartOf="@+id/last_date"
+
                             android:text="@string/server_data"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-
                             android:textColor="?attr/colorOnSurface"
                             android:textStyle="bold" />
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/server_sender"
+                        <TextView
+                            android:id="@+id/last_date"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/switch_width"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-
-                            android:text="@string/as_sender"
-                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+                            android:layout_marginEnd="@dimen/padding" />
 
 
                     </RelativeLayout>
@@ -318,20 +320,21 @@
                             style="@style/TextViewLineSub"
                             android:text="@string/none_data" />
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
 
                             <Button
-                                android:id="@+id/test_webdav"
+                                android:id="@+id/save_webdav"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="@dimen/padding"
                                 android:text="@string/save_webdav"
                                 tools:ignore="RelativeOverlap" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
 
                     </LinearLayout>

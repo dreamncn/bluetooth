@@ -60,7 +60,7 @@ class SettingsActivity : BaseActivity() {
              }
          }
 
-         SpUtils.getString("setting_language",null).apply { binding.settingLangDesc.text = if (this == "SYSTEM") getString(R.string.lang_follow_system) else Locale.forLanguageTag(this).displayName }
+         SpUtils.getString("setting_language","SYSTEM").apply { binding.settingLangDesc.text = if (this == "SYSTEM") getString(R.string.lang_follow_system) else Locale.forLanguageTag(this).displayName }
 
 
 
