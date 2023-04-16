@@ -9,7 +9,7 @@
     <string name="signal">Signal strength</string>
     <string name="use_mock">Enable simulation</string>
     <string name="server_data">Webdav data</string>
-    <string name="as_sender">As the sender</string>
+    <string name="as_sender">This device serves as the sender.</string>
     <string name="webdav_data">Webdav service provider</string>
     <string name="save_webdav">Save</string>
     <string name="webdav_username">Username</string>
@@ -44,4 +44,5 @@
     <string name="default_theme">Default Theme</string>
     <string name="always_off">Always off</string>
     <string name="always_on">Always on</string>
+    <string name="active_success">Plugin activated.</string>
 </resources>

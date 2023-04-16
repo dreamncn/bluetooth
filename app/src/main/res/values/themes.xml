@@ -1,6 +1,7 @@
 
 <resources>
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+        <!--<item name="statusBarBackground">@android:color/transparent</item>-->
     </style>
 
     <style name="TextViewLine">
@@ -9,9 +10,11 @@
         <item name="android:paddingTop">@dimen/one_padding</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
     <style name="TextViewLineSub" parent="TextViewLine">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small.Inverse</item>
     </style>
     <style name="TextViewLineSetting" parent="TextViewLine">
         <item name="android:textColor">?attr/colorPrimary</item>

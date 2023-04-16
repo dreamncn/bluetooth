@@ -34,7 +34,7 @@ open class BaseActivity : AppCompatActivity() {
     lateinit var scrollView: ScrollView
     var tag = "BaseActivity";
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-       // ThemeEngine.applyToActivity(this)
+
         super.onCreate(savedInstanceState, persistentState)
 
     }
@@ -47,6 +47,7 @@ open class BaseActivity : AppCompatActivity() {
     fun onViewCreated(){
         //主题初始化
         val themeMode = ThemeEngine.getInstance(this@BaseActivity).themeMode
+        //ThemeEngine.applyToActivity(this)
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         statusBar {
             fitWindow = false

@@ -9,6 +9,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbarLayout"
+        android:foregroundTint="@color/barHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -94,6 +95,84 @@
                     android:layout_margin="@dimen/padding"
                     android:orientation="vertical">
 
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/padding">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/padding"
+                            android:layout_marginEnd="@dimen/padding"
+                            android:layout_toStartOf="@+id/as_sender"
+                            android:text="@string/as_sender"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textStyle="bold"
+                            tools:ignore="RelativeOverlap" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/as_sender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/switch_width"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/switch_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/padding"
+                            android:layout_marginEnd="@dimen/padding"
+                            android:layout_toStartOf="@+id/switch_button"
+                            android:text="@string/use_mock"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textStyle="bold"
+                            tools:ignore="RelativeOverlap" />
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/switch_width"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/padding"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding"
+                app:cardCornerRadius="@dimen/radius">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding"
+                    android:orientation="vertical">
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -159,31 +238,6 @@
 
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/switch_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/padding"
-                            android:text="@string/use_mock"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textStyle="bold"
-                            tools:ignore="RelativeOverlap" />
-
-                        <Switch
-                            android:id="@+id/switch_button"
-                            android:layout_width="@dimen/switch_width"
-                            android:layout_height="@dimen/switch_width"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/padding"
-                            tools:ignore="UseSwitchCompatOrMaterialXml" />
-                    </RelativeLayout>
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
@@ -213,10 +267,12 @@
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:text="@string/server_data"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+
                             android:textColor="?attr/colorOnSurface"
                             android:textStyle="bold" />
 
-                        <Switch
+                        <com.google.android.material.materialswitch.MaterialSwitch
                             android:id="@+id/server_sender"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/switch_width"
