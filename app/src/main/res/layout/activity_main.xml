@@ -127,6 +127,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/enable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical">
@@ -292,33 +293,64 @@
                         android:orientation="vertical"
                         android:padding="@dimen/padding">
 
-                        <TextView
-                            style="@style/TextViewLine"
-                            android:text="@string/webdav_data" />
+                        <LinearLayout
+                            android:id="@+id/webdav_label_area"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/webdav_label"
-                            style="@style/TextViewLineSub"
-                            android:paddingBottom="@dimen/padding"
-                            android:text="@string/none_data" />
+                            <TextView
+                                style="@style/TextViewLine"
+                                android:text="@string/webdav_data" />
 
-                        <TextView
-                            style="@style/TextViewLine"
-                            android:text="@string/webdav_username" />
+                            <TextView
+                                android:id="@+id/webdav_label"
+                                style="@style/TextViewLineSub"
+                                android:paddingBottom="@dimen/padding"
+                                android:text="@string/none_data" />
+                        </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/username_label"
-                            style="@style/TextViewLineSub"
-                            android:text="@string/none_data" />
 
-                        <TextView
-                            style="@style/TextViewLine"
-                            android:text="@string/webdav_password" />
+                        <LinearLayout
+                            android:id="@+id/username_label_area"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/password_label"
-                            style="@style/TextViewLineSub"
-                            android:text="@string/none_data" />
+                            <TextView
+                                style="@style/TextViewLine"
+
+                                android:text="@string/webdav_username" />
+
+                            <TextView
+                                android:id="@+id/username_label"
+                                style="@style/TextViewLineSub"
+                                android:text="@string/none_data" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/password_label_area"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/TextViewLine"
+                                android:text="@string/webdav_password" />
+
+                            <TextView
+                                android:id="@+id/password_label"
+                                style="@style/TextViewLineSub"
+                                android:text="@string/none_data" />
+                        </LinearLayout>
+
 
                         <RelativeLayout
                             android:layout_width="match_parent"

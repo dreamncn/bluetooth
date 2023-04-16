@@ -1,21 +1,21 @@
 package net.ankio.bluetooth.ui
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
-import android.widget.TextView
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.text.HtmlCompat
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import net.ankio.bluetooth.BuildConfig
 import net.ankio.bluetooth.R
 import net.ankio.bluetooth.databinding.AboutDialogBinding
 import net.ankio.bluetooth.databinding.ActivityMainBinding
+import net.ankio.bluetooth.databinding.InputLayoutBinding
 import net.ankio.bluetooth.utils.HookUtils
 import net.ankio.bluetooth.utils.SpUtils
 import rikka.html.text.toHtml
+
 
 class MainActivity : BaseActivity() {
     //视图绑定
@@ -68,9 +68,14 @@ class MainActivity : BaseActivity() {
             binding.msgLabel.text = getString(R.string.active_success)
             binding.imageView.setColorFilter(getThemeAttrColor(com.google.android.material.R.attr.colorOnPrimary))
             binding.msgLabel.setTextColor(getThemeAttrColor(com.google.android.material.R.attr.colorOnPrimary))
-        }else{
+        } else {
             binding.active.setBackgroundColor(getThemeAttrColor(com.google.android.material.R.attr.colorErrorContainer))
-            binding.imageView.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_error))
+            binding.imageView.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    this,
+                    R.drawable.ic_error
+                )
+            )
             binding.msgLabel.text = getString(R.string.active_error)
             binding.imageView.setColorFilter(getThemeAttrColor(com.google.android.material.R.attr.colorOnErrorContainer))
             binding.msgLabel.setTextColor(getThemeAttrColor(com.google.android.material.R.attr.colorOnErrorContainer))
@@ -78,20 +83,94 @@ class MainActivity : BaseActivity() {
 
 
         setMacBluetoothData()
-
+        //如果是发送端，点击保存就启动定时发送服务
+        //如果是接收端，在显示同步按钮让用户手动同步/页面切换的时候同步
 
     }
 
-    private fun setMacBluetoothData(){
-        SpUtils.getString("pref_mac","").apply {
+    private fun setMacBluetoothData() {
+        SpUtils.getString("pref_mac", "").apply {
             binding.macLabel.text = this
         }
-        SpUtils.getString("pref_data","").apply {
+        SpUtils.getString("pref_data", "").apply {
             binding.broadcastLabel.text = this
         }
-        SpUtils.getString("pref_signal","").apply {
+        SpUtils.getString("pref_signal", "").apply {
             binding.signalLabel.text = this
         }
+        //是否作为发送端
+        SpUtils.getBoolean("pref_as_sender", false).apply {
+            binding.asSender.isSelected = this
+            binding.asSender.setOnCheckedChangeListener { _, isChecked ->
+                SpUtils.putBoolean("pref_as_sender", isChecked)
+                if (isChecked) {
+                    binding.enable.visibility = View.GONE
+                } else {
+                    binding.enable.visibility = View.VISIBLE
+                }
+            }
+        }
+        //是否开启模拟
+        SpUtils.getBoolean("pref_enable", false).apply {
+            binding.switchButton.isSelected = this
+            binding.switchButton.setOnCheckedChangeListener { _, isChecked ->
+                SpUtils.putBoolean("pref_enable", isChecked)
+            }
+        }
+        //配置信息
+        SpUtils.getString("webdav_server", "https://dav.jianguoyun.com/dav/").apply {
+            binding.webdavLabel.text = this
+            binding.webdavLabelArea.setOnClickListener {
+                showInput(this, getString(R.string.please_input_webdav), object : InputListener {
+                    override fun onInput(value: String) {
+                        SpUtils.putString("webdav_server", value)
+                        binding.webdavLabel.text = value
+                    }
+                })
+            }
+        }
+        SpUtils.getString("webdav_username", "").apply {
+            binding.usernameLabel.text = this
+            binding.usernameLabelArea.setOnClickListener {
+                showInput(this, getString(R.string.please_input_username), object : InputListener {
+                    override fun onInput(value: String) {
+                        SpUtils.putString("webdav_username", value)
+                        binding.usernameLabel.text = value
+                    }
+                })
+            }
+        }
+        SpUtils.getString("webdav_password", "").apply {
+            binding.passwordLabel.text = this
+            binding.passwordLabelArea.setOnClickListener {
+                showInput(this, getString(R.string.please_input_webdav), object : InputListener {
+                    override fun onInput(value: String) {
+                        SpUtils.putString("webdav_password", value)
+                        binding.passwordLabel.text = value
+                    }
+                })
+            }
+        }
+    }
+
+    private fun showInput(value: String, title: String, inputListener: InputListener) {
+
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val sheetBinding = InputLayoutBinding.inflate(layoutInflater)
+        sheetBinding.title.text = title
+        sheetBinding.input.setText(value)
+        sheetBinding.submit.setOnClickListener {
+            inputListener.onInput(sheetBinding.input.text.toString())
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.setContentView(sheetBinding.root)
+
+        bottomSheetDialog.show()
+
+    }
+
+    interface InputListener {
+        fun onInput(value: String)
     }
 
 

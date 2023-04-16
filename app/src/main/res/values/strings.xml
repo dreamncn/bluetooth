@@ -45,4 +45,7 @@
     <string name="always_off">Always off</string>
     <string name="always_on">Always on</string>
     <string name="active_success">Plugin activated.</string>
+    <string name="submit">Submit</string>
+    <string name="please_input_webdav">Please Input the Webdav server address:</string>
+    <string name="please_input_username">Please input the username of Webdav:</string>
 </resources>

@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
-import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import android.widget.ScrollView
 import androidx.annotation.AttrRes
@@ -32,12 +30,7 @@ open class BaseActivity : AppCompatActivity() {
     lateinit var toolbarLayout: AppBarLayout
     lateinit var toolbar: MaterialToolbar
     lateinit var scrollView: ScrollView
-    var tag = "BaseActivity";
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-
-        super.onCreate(savedInstanceState, persistentState)
-
-    }
+    var tag = "BaseActivity"
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase?.let {
             ContextWrapper.wrap(it, App.getLocale())
@@ -52,7 +45,8 @@ open class BaseActivity : AppCompatActivity() {
         statusBar {
             fitWindow = false
             background.transparent()
-            light = !   (themeMode == ThemeMode.DARK || (themeMode == ThemeMode.AUTO && currentNightMode == Configuration.UI_MODE_NIGHT_YES))
+            light =
+                !(themeMode == ThemeMode.DARK || (themeMode == ThemeMode.AUTO && currentNightMode == Configuration.UI_MODE_NIGHT_YES))
         }
         navigationBar { transparent() }
         if(::toolbarLayout.isInitialized){
