@@ -52,19 +52,37 @@ class MainActivity : BaseActivity() {
 
                     true
                 }
+
                 else -> false
             }
 
         }
 
         onViewCreated()
+
+        binding.saveWebdav.setOnClickListener {
+            if (SpUtils.getBoolean("pref_as_sender", false)) {
+
+            } else {
+
+            }
+        }
+    }
+
+    fun trySyncFromWebDav() {
+
     }
 
     override fun onResume() {
         super.onResume()
-        if(HookUtils.getActiveAndSupportFramework()){
+        if (HookUtils.getActiveAndSupportFramework()) {
             binding.active.setBackgroundColor(getThemeAttrColor(com.google.android.material.R.attr.colorPrimary))
-            binding.imageView.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.ic_success))
+            binding.imageView.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    this,
+                    R.drawable.ic_success
+                )
+            )
             binding.msgLabel.text = getString(R.string.active_success)
             binding.imageView.setColorFilter(getThemeAttrColor(com.google.android.material.R.attr.colorOnPrimary))
             binding.msgLabel.setTextColor(getThemeAttrColor(com.google.android.material.R.attr.colorOnPrimary))
@@ -151,6 +169,10 @@ class MainActivity : BaseActivity() {
                 })
             }
         }
+        SpUtils.getString("webdav_last", getString(R.string.webdav_no_sync)).apply {
+            binding.lastDate.text = this
+        }
+
     }
 
     private fun showInput(value: String, title: String, inputListener: InputListener) {
