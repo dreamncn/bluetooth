@@ -49,4 +49,7 @@
     <string name="please_input_webdav">Please Input the Webdav server address:</string>
     <string name="please_input_username">Please input the username of Webdav:</string>
     <string name="webdav_no_sync">Not sync yet.</string>
+    <string name="get_bluetooth_error">Sorry, Can\'t get bluetooth data from Webdav.</string>
+    <string name="webdav_error">Sorry, We can\'t connect the Webdav server, please check your password and username</string>
+    <string name="webdav_enable">Enable webdav sync</string>
 </resources>

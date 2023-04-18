@@ -8,6 +8,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.view.View
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
@@ -115,16 +116,14 @@ open class BaseActivity : AppCompatActivity() {
 
     }
 
-    fun recreateInit(){
+    fun recreateInit() {
         LocaleDelegate.changedList.clear()
         LocaleDelegate.changedList[this.javaClass] = true
         recreate()
     }
-    @ColorInt
-    fun getColorFromInt(int: Int):Int{
-        val hex = int.toString(16)
-        return Color.parseColor("#$hex")
-    }
 
+    fun showMsg(int: Int) {
+        Toast.makeText(this, int, Toast.LENGTH_LONG).show()
+    }
 
 }

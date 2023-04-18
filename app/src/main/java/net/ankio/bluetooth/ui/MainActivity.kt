@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import com.github.sardine.impl.SardineException
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import net.ankio.bluetooth.R
@@ -14,6 +15,7 @@ import net.ankio.bluetooth.databinding.ActivityMainBinding
 import net.ankio.bluetooth.databinding.InputLayoutBinding
 import net.ankio.bluetooth.utils.HookUtils
 import net.ankio.bluetooth.utils.SpUtils
+import net.ankio.bluetooth.utils.WebdavUtils
 import rikka.html.text.toHtml
 
 
@@ -101,10 +103,37 @@ class MainActivity : BaseActivity() {
 
 
         setMacBluetoothData()
+
         //如果是发送端，点击保存就启动定时发送服务
         //如果是接收端，在显示同步按钮让用户手动同步/页面切换的时候同步
+        if (SpUtils.getBoolean("pref_enable_webdav", false)) {
+            if (SpUtils.getBoolean("pref_as_sender", false)) {
+
+            } else {
+                getServer()
+            }
+        }
+
 
     }
+
+    private fun getServer() {
+        try {
+            val bluetoothData = WebdavUtils().getFromServer()
+            if (bluetoothData == null) {
+                showMsg(R.string.get_bluetooth_error)
+                return
+            }
+            SpUtils.putString("pref_mac", bluetoothData.mac)
+            SpUtils.putString("pref_data", bluetoothData.data)
+            SpUtils.putString("pref_signal", bluetoothData.rssi)
+        } catch (e: SardineException) {
+            showMsg(R.string.webdav_error)
+            return
+        }
+
+    }
+
 
     private fun setMacBluetoothData() {
         SpUtils.getString("pref_mac", "").apply {
@@ -116,6 +145,17 @@ class MainActivity : BaseActivity() {
         SpUtils.getString("pref_signal", "").apply {
             binding.signalLabel.text = this
         }
+        SpUtils.getBoolean("pref_enable_webdav", false).apply {
+            binding.webdavEnable.isSelected = this
+            binding.webdavEnable.setOnCheckedChangeListener { _, isChecked ->
+                SpUtils.putBoolean("pref_enable_webdav", isChecked)
+                if (isChecked) {
+                    binding.asSender.visibility = View.GONE
+                } else {
+                    binding.asSender.visibility = View.VISIBLE
+                }
+            }
+        }
         //是否作为发送端
         SpUtils.getBoolean("pref_as_sender", false).apply {
             binding.asSender.isSelected = this
@@ -123,10 +163,12 @@ class MainActivity : BaseActivity() {
                 SpUtils.putBoolean("pref_as_sender", isChecked)
                 if (isChecked) {
                     binding.enable.visibility = View.GONE
+                    SpUtils.putBoolean("pref_enable", false)
                 } else {
                     binding.enable.visibility = View.VISIBLE
                 }
             }
+
         }
         //是否开启模拟
         SpUtils.getBoolean("pref_enable", false).apply {
