@@ -108,12 +108,16 @@ class MainActivity : BaseActivity() {
         //如果是接收端，在显示同步按钮让用户手动同步/页面切换的时候同步
         if (SpUtils.getBoolean("pref_enable_webdav", false)) {
             if (SpUtils.getBoolean("pref_as_sender", false)) {
-
+                startServer()
             } else {
                 getServer()
             }
         }
 
+
+    }
+
+    fun startServer() {
 
     }
 

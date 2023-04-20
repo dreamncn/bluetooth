@@ -71,5 +71,10 @@ dependencies {
     //gson
     implementation 'com.google.code.gson:gson:2.8.9'
 
-
+    //权限请求 支持Androidx
+    implementation 'com.guolindev.permissionx:permissionx:1.7.1'
+    //让你的适配器一目了然，告别代码冗余
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
+    //Xposed组件库
+    compileOnly 'de.robv.android.xposed:api:82'
 }

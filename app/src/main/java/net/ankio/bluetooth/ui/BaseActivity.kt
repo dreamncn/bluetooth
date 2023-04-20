@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.view.View
-import android.widget.ScrollView
 import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -30,7 +29,7 @@ import net.ankio.bluetooth.utils.LocaleDelegate
 open class BaseActivity : AppCompatActivity() {
     lateinit var toolbarLayout: AppBarLayout
     lateinit var toolbar: MaterialToolbar
-    lateinit var scrollView: ScrollView
+    lateinit var scrollView: View
     var tag = "BaseActivity"
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase?.let {
