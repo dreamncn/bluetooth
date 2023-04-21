@@ -1,10 +1,14 @@
 package net.ankio.bluetooth.hook
 
+import android.content.pm.PackageInfo
 import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import net.ankio.bluetooth.BuildConfig
+
 
 class MainServer : IXposedHookLoadPackage {
     private val tag = "AnkioのBluetooth Main:"
@@ -18,6 +22,17 @@ class MainServer : IXposedHookLoadPackage {
             cClass,
             "getActiveAndSupportFramework",
             XC_MethodReplacement.returnConstant(true)
+        )
+
+        XposedHelpers.findAndHookMethod(
+            cClass,
+            "getAppVersion"
+            ,object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam?) {
+                    // 获取应用程序的包信息
+                    param?.result = BuildConfig.VERSION_CODE
+                }
+            }
         )
     }
 }

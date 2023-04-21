@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.AttrRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import com.github.sardine.impl.SardineException
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import net.ankio.bluetooth.BuildConfig
 import net.ankio.bluetooth.R
 import net.ankio.bluetooth.databinding.AboutDialogBinding
 import net.ankio.bluetooth.databinding.ActivityMainBinding
@@ -78,30 +82,28 @@ class MainActivity : BaseActivity() {
 
     }
 
+    private fun setActive(@StringRes text: Int, @AttrRes backgroundColor:Int, @AttrRes textColor:Int, @DrawableRes drawable:Int){
+        binding.active.setBackgroundColor(getThemeAttrColor(backgroundColor))
+        binding.imageView.setImageDrawable(
+            AppCompatResources.getDrawable(
+                this,
+                drawable
+            )
+        )
+        binding.msgLabel.text = getString(text)
+        binding.imageView.setColorFilter(getThemeAttrColor(textColor))
+        binding.msgLabel.setTextColor(getThemeAttrColor(textColor))
+    }
     override fun onResume() {
         super.onResume()
         if (HookUtils.getActiveAndSupportFramework()) {
-            binding.active.setBackgroundColor(getThemeAttrColor(com.google.android.material.R.attr.colorPrimary))
-            binding.imageView.setImageDrawable(
-                AppCompatResources.getDrawable(
-                    this,
-                    R.drawable.ic_success
-                )
-            )
-            binding.msgLabel.text = getString(R.string.active_success)
-            binding.imageView.setColorFilter(getThemeAttrColor(com.google.android.material.R.attr.colorOnPrimary))
-            binding.msgLabel.setTextColor(getThemeAttrColor(com.google.android.material.R.attr.colorOnPrimary))
+            if(HookUtils.getAppVersion()!=BuildConfig.VERSION_CODE){
+                setActive(R.string.active_restart,com.google.android.material.R.attr.colorSecondary,com.google.android.material.R.attr.colorOnSecondary,R.drawable.ic_error)
+                return
+            }
+            setActive(R.string.active_success,com.google.android.material.R.attr.colorPrimary,com.google.android.material.R.attr.colorOnPrimary,R.drawable.ic_success)
         } else {
-            binding.active.setBackgroundColor(getThemeAttrColor(com.google.android.material.R.attr.colorErrorContainer))
-            binding.imageView.setImageDrawable(
-                AppCompatResources.getDrawable(
-                    this,
-                    R.drawable.ic_error
-                )
-            )
-            binding.msgLabel.text = getString(R.string.active_error)
-            binding.imageView.setColorFilter(getThemeAttrColor(com.google.android.material.R.attr.colorOnErrorContainer))
-            binding.msgLabel.setTextColor(getThemeAttrColor(com.google.android.material.R.attr.colorOnErrorContainer))
+            setActive(R.string.active_error,com.google.android.material.R.attr.colorErrorContainer,com.google.android.material.R.attr.colorOnErrorContainer, R.drawable.ic_error)
         }
 
 
