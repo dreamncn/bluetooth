@@ -62,4 +62,5 @@
     <string name="filter_empty">Filter empty name</string>
     <string name="signal_filter">Single Filter</string>
     <string name="company_filter">Company filter</string>
+    <string name="ic_empty">Empty</string>
 </resources>

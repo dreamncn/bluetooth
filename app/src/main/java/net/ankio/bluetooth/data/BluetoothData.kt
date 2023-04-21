@@ -19,7 +19,7 @@ class BluetoothData(context: Context) {
                 0xFF -> {
                     // 解析 Manufacturer Specific Data 字段
                     val companyId = parseCompanyId(fieldData, 0)
-                    val data = fieldData.copyOfRange(2, fieldData.size)
+                    //fieldData.copyOfRange(2, fieldData.size)
                     // 处理厂商数据
                     return bluetoothCompanyParser.getCompanyName(companyId)
                 }
