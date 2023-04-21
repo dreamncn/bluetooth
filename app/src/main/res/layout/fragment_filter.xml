@@ -5,6 +5,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/padding"
+        android:text="@string/filter"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +38,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp">
@@ -38,16 +48,16 @@
             android:layout_height="wrap_content"
             android:text="@string/signal_filter" />
 
-        <androidx.appcompat.widget.AppCompatSeekBar
+        <com.google.android.material.slider.Slider
             android:id="@+id/sb_rssi"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:layout_weight="1"
-            android:max="100"
-            android:min="40"
-            android:progress="100" />
+            android:progress="100"
+            android:valueFrom="40"
+            android:valueTo="100" />
 
         <TextView
             android:id="@+id/tv_rssi"
@@ -85,14 +95,15 @@
 
         android:padding="@dimen/padding">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_alignParentEnd="true"
-
             android:text="@string/save_webdav"
-            tools:ignore="RelativeOverlap" />
+             />
 
 
     </RelativeLayout>

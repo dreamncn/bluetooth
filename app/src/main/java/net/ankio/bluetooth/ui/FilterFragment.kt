@@ -37,16 +37,11 @@ class FilterFragment : BottomSheetDialogFragment() {
                 isChecked
             )
         }
-        binding.sbRssi.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                binding.tvRssi.text = "-$progress dBm"
-            }
+        binding.sbRssi.addOnChangeListener { _, value, _ ->
+            binding.tvRssi.text = "-"+value.toInt().toString()+" dBm"
+            SpUtils.putInt(BleConstant.RSSI, value.toInt())
+        }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                SpUtils.putInt(BleConstant.RSSI, seekBar.progress)
-            }
-        })
         binding.textField.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -62,7 +57,7 @@ class FilterFragment : BottomSheetDialogFragment() {
         binding.switchDeviceName.isChecked = SpUtils.getBoolean(BleConstant.NULL_NAME)
         //对同一个值进行配置，显示在Seekbar和TextView上
         SpUtils.getInt(BleConstant.RSSI, 100)
-            .apply { binding.sbRssi.progress = this; binding.tvRssi.text = "-$this dBm" }
+            .apply { binding.sbRssi.value = this.toFloat(); binding.tvRssi.text = "-$this dBm" }
         SpUtils.getString(BleConstant.COMPANY, "")
             .apply { binding.textField.text = Editable.Factory.getInstance().newEditable(this) }
     }
