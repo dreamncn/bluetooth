@@ -12,12 +12,18 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.marginBottom
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter.AnimationType
 import com.permissionx.guolindev.PermissionX
+import com.zackratos.ultimatebarx.ultimatebarx.addNavigationBarBottomPadding
+import com.zackratos.ultimatebarx.ultimatebarx.navigationBarHeight
 import net.ankio.bluetooth.R
 import net.ankio.bluetooth.adapter.BleDeviceAdapter
 import net.ankio.bluetooth.bluetooth.BleDevice
@@ -104,6 +110,7 @@ class ScanActivity : BaseActivity() {
             showMsg(getString(R.string.unsupport_bluetooth))
             finish()
         }
+        onViewCreated()
     }
 
     override fun onStop() {
@@ -145,6 +152,16 @@ class ScanActivity : BaseActivity() {
 
             true
 
+        }
+        binding.scrollView.apply {
+            layoutManager = LinearLayoutManager(this@ScanActivity)
+            adapter = bleAdapter
+        }
+         navigationBarHeight{
+             val layoutParams = binding.fabAdd.layoutParams as ViewGroup.MarginLayoutParams
+             layoutParams.bottomMargin = binding.fabAdd.marginBottom + it
+             binding.fabAdd.layoutParams = layoutParams
+           //  binding.fabAdd.marginBottom = binding.fabAdd.marginBottom + it
         }
     }
 

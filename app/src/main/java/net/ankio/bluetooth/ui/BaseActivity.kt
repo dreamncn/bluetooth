@@ -18,6 +18,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.color.MaterialColors
 import com.quickersilver.themeengine.ThemeEngine
 import com.quickersilver.themeengine.ThemeMode
+import com.zackratos.ultimatebarx.ultimatebarx.addNavigationBarBottomPadding
 import com.zackratos.ultimatebarx.ultimatebarx.addStatusBarTopPadding
 import com.zackratos.ultimatebarx.ultimatebarx.navigationBar
 import com.zackratos.ultimatebarx.ultimatebarx.statusBar
@@ -79,6 +80,9 @@ open class BaseActivity : AppCompatActivity() {
                 }
                 animatorStart = false
             }
+
+            scrollView.addNavigationBarBottomPadding()
+
         }
     }
     fun getThemeAttrColor( @AttrRes attrResId: Int): Int {

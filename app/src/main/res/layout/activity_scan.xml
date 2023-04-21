@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/linear"
     tools:context=".ui.ScanActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,6 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="?attr/colorOnSurface"
             app:menu="@menu/scan_menu"
             app:title="@string/scan_blue" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -30,6 +33,8 @@
         android:layout_below="@id/toolbarLayout"
         android:layout_marginTop="0dp"
         android:indeterminate="true"
+
+
         android:visibility="invisible" />
 
 

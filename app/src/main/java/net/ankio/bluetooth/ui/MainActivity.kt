@@ -69,6 +69,9 @@ class MainActivity : BaseActivity() {
 
             }
         }
+        binding.search.setOnClickListener {
+            start<ScanActivity>()
+        }
     }
 
     fun trySyncFromWebDav() {
