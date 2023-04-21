@@ -122,6 +122,7 @@ class ScanActivity : BaseActivity() {
      * 初始化
      */
     private fun initView() {
+        toolbar.setNavigationOnClickListener { finish(); }
         bleAdapter = BleDeviceAdapter(mList).apply {
             setOnItemClickListener { _, _, position ->
                 stopScan()
