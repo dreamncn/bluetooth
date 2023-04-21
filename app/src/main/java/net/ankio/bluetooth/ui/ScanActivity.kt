@@ -20,9 +20,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter.AnimationType
 import com.permissionx.guolindev.PermissionX
-import com.zackratos.ultimatebarx.ultimatebarx.addNavigationBarBottomPadding
 import com.zackratos.ultimatebarx.ultimatebarx.navigationBarHeight
 import net.ankio.bluetooth.R
 import net.ankio.bluetooth.adapter.BleDeviceAdapter
@@ -34,6 +34,7 @@ import net.ankio.bluetooth.utils.*
 import net.ankio.bluetooth.utils.BleConstant.BleConstant.COMPANY
 import net.ankio.bluetooth.utils.BleConstant.BleConstant.RSSI
 import java.util.*
+
 
 /**
  * 扫描
@@ -98,7 +99,7 @@ class ScanActivity : BaseActivity() {
         toolbar = binding.toolbar
         scrollView = binding.scrollView
         setContentView(binding.root)
-
+        onViewCreated()
 
         try {
             defaultAdapter = (getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
@@ -110,7 +111,7 @@ class ScanActivity : BaseActivity() {
             showMsg(getString(R.string.unsupport_bluetooth))
             finish()
         }
-        onViewCreated()
+
     }
 
     override fun onStop() {
@@ -129,7 +130,7 @@ class ScanActivity : BaseActivity() {
                 val bleDevice = mList[position]
                 SpUtils.putString("pref_mac", bleDevice.address)
                 SpUtils.putString("pref_data", bleDevice.data)
-                SpUtils.putInt("pref_rssi", bleDevice.rssi)
+                SpUtils.putString("pref_signal", bleDevice.rssi.toString())
                 startActivity(Intent(this@ScanActivity, MainActivity::class.java))
             }
             animationEnable = true
@@ -154,10 +155,12 @@ class ScanActivity : BaseActivity() {
             true
 
         }
+        var linearLayoutManager = LinearLayoutManager(this)
         binding.scrollView.apply {
-            layoutManager = LinearLayoutManager(this@ScanActivity)
+            layoutManager = linearLayoutManager
             adapter = bleAdapter
         }
+
          navigationBarHeight{
              val layoutParams = binding.fabAdd.layoutParams as ViewGroup.MarginLayoutParams
              layoutParams.bottomMargin = binding.fabAdd.marginBottom + it
@@ -189,11 +192,12 @@ class ScanActivity : BaseActivity() {
         if (!addressList.contains(address)) {
             addressList.add(address)
             mList.add(bleDevice)
+            //刷新列表适配器
+            bleAdapter.notifyItemInserted(mList.size)
         }
         //无设备UI展示
         binding.layNoEquipment.visibility = if (mList.size > 0) View.GONE else View.VISIBLE
-        //刷新列表适配器
-        bleAdapter.notifyDataSetChanged()
+
     }
 
 

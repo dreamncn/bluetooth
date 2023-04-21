@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.AttrRes
@@ -13,6 +14,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.color.MaterialColors
@@ -61,9 +63,19 @@ open class BaseActivity : AppCompatActivity() {
             var last = mStatusBarColor
             val mStatusBarColor2 =  getThemeAttrColor(this,theme,com.google.android.material.R.attr.colorSurfaceVariant)
             var animatorStart = false
-            scrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+
+
+            scrollView.setOnScrollChangeListener { view, _, scrollY, _, oldScrollY ->
+                var scrollYs = scrollY
+                if(scrollView is RecyclerView){
+                    scrollYs = (scrollView as RecyclerView).computeVerticalScrollOffset();
+                }
+                Log.d(tag, "scrollView scrollYs =>$scrollYs")
+                Log.d(tag, "scrollView oldScrollY =>$oldScrollY")
+
                 if(animatorStart)return@setOnScrollChangeListener
-                if(scrollY.toFloat()>0){
+
+                if(scrollYs.toFloat()>0){
                     if (last!=mStatusBarColor2){
                         animatorStart = true
                         viewBackgroundGradientAnimation(toolbarLayout,mStatusBarColor,mStatusBarColor2)

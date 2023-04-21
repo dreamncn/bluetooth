@@ -82,7 +82,7 @@ dependencies {
     //匿名统计
     implementation 'com.flurry.android:analytics:14.2.0@aar'
     //gson
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     //权限请求 支持Androidx
     implementation 'com.guolindev.permissionx:permissionx:1.7.1'
