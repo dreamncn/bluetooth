@@ -1,7 +1,7 @@
 
 <resources>
     <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
-        <!--<item name="statusBarBackground">@android:color/transparent</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="TextViewLine">
