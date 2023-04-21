@@ -391,7 +391,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="@dimen/padding"
+                                android:layout_marginEnd="@dimen/one_padding"
                                 android:text="@string/save_webdav"
                                 tools:ignore="RelativeOverlap" />
                         </RelativeLayout>
