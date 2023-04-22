@@ -15,6 +15,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
@@ -22,6 +23,8 @@ import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter.AnimationType
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.permissionx.guolindev.PermissionX
 import com.zackratos.ultimatebarx.ultimatebarx.navigationBarHeight
 import net.ankio.bluetooth.R
@@ -53,6 +56,9 @@ class ScanActivity : BaseActivity() {
 
     //蓝牙列表
     private var mList: MutableList<BleDevice> = ArrayList()
+
+    //蓝牙列表
+    private var historyList: MutableList<BleDevice> = ArrayList()
 
     //地址列表
     private var addressList: MutableList<String> = ArrayList()
@@ -123,39 +129,60 @@ class ScanActivity : BaseActivity() {
      * 初始化
      */
     private fun initView() {
+        historyList = Gson().fromJson(SpUtils.getString("history",""), object : TypeToken<List<BleDevice>>() {}.type) as MutableList<BleDevice>
         toolbar.setNavigationOnClickListener { finish(); }
         bleAdapter = BleDeviceAdapter(mList).apply {
             setOnItemClickListener { _, _, position ->
-                stopScan()
                 val bleDevice = mList[position]
                 SpUtils.putString("pref_mac", bleDevice.address)
                 SpUtils.putString("pref_data", bleDevice.data)
-                SpUtils.putString("pref_signal", bleDevice.rssi.toString())
+                SpUtils.putString("pref_rssi", bleDevice.rssi.toString())
+                if(!historyList.contains(bleDevice)){
+                    historyList.add(bleDevice)
+                    SpUtils.putString("history",Gson().toJson(historyList))
+                }
+                stopScan()
                 startActivity(Intent(this@ScanActivity, MainActivity::class.java))
             }
             animationEnable = true
             setAnimationWithDefault(AnimationType.SlideInRight)
+            setOnItemLongClickListener{ adapter, _, position ->
+                if (mList!=historyList) return@setOnItemLongClickListener false
+                adapter.notifyItemRemoved(position)
+                mList.removeAt(position)
+                historyList.removeAt(position)
+                SpUtils.putString("history",Gson().toJson(historyList))
+                true
+            }
         }
-        // layoutManager = LinearLayoutManager(this@ScanActivity)
+
         //扫描蓝牙
         binding.fabAdd.setOnClickListener {
             if (isScanning) stopScan()
             else scan()
         }
-        toolbar.setOnMenuItemClickListener {
-            val _scan = isScanning
-            stopScan()
-            FilterFragment().setOnCloseListener(object : FilterCloseInterface {
-                override fun onClose() {
-                    if (_scan) scan()
-                }
+        toolbar.setOnMenuItemClickListener { it ->
+            if(it.itemId == R.id.filter){
+                val _scan = isScanning
+                stopScan()
+                FilterFragment().setOnCloseListener(object : FilterCloseInterface {
+                    override fun onClose() {
+                        if (_scan) scan()
+                    }
 
-            }).show(supportFragmentManager, "Filter")
+                }).show(supportFragmentManager, "Filter")
+            }else{
+                stopScan()
+                historyList.forEach { it2 ->
+                    addDeviceList(it2,false)
+                }
+            }
+
 
             true
 
         }
-        var linearLayoutManager = LinearLayoutManager(this)
+        val linearLayoutManager = LinearLayoutManager(this)
         binding.scrollView.apply {
             layoutManager = linearLayoutManager
             adapter = bleAdapter
@@ -165,7 +192,6 @@ class ScanActivity : BaseActivity() {
              val layoutParams = binding.fabAdd.layoutParams as ViewGroup.MarginLayoutParams
              layoutParams.bottomMargin = binding.fabAdd.marginBottom + it
              binding.fabAdd.layoutParams = layoutParams
-           //  binding.fabAdd.marginBottom = binding.fabAdd.marginBottom + it
         }
     }
 
@@ -173,20 +199,21 @@ class ScanActivity : BaseActivity() {
     /**
      * 添加到设备列表
      */
-    private fun addDeviceList(bleDevice: BleDevice) {
+    private fun addDeviceList(bleDevice: BleDevice,filter:Boolean = true) {
+        if (filter){
+            //过滤ble厂商名
+            val company = SpUtils.getString(COMPANY, "")
 
-        //过滤ble厂商名
-        val company = SpUtils.getString(COMPANY, "")
+            if (!TextUtils.isEmpty(company) && company.let { bleDevice.company?.contains(it) } == false) {
+                return
+            }
+            rssi = -SpUtils.getInt(RSSI, 100)
 
-        if (!TextUtils.isEmpty(company) && company.let { bleDevice.company?.contains(it) } == false) {
-            return
+            if (bleDevice.rssi < rssi) {
+                return
+            }
         }
-        rssi = -SpUtils.getInt(RSSI, 100)
-
-        if (bleDevice.rssi < rssi) {
-            return
-        }
-
+        
         //检查之前所添加的设备地址是否存在当前地址列表
         val address = bleDevice.address
         if (!addressList.contains(address)) {
@@ -251,6 +278,10 @@ class ScanActivity : BaseActivity() {
      * 停止扫描
      */
     private fun stopScan() {
+        addressList.clear()
+        bleAdapter.notifyItemRangeRemoved(0, mList.size)
+        mList.clear()
+      
         if (!::defaultAdapter.isInitialized || !defaultAdapter.isEnabled) {
             showMsg(getString(R.string.not_open_bluetooth));return
         }

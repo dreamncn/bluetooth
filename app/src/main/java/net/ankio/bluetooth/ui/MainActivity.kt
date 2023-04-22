@@ -135,7 +135,7 @@ class MainActivity : BaseActivity() {
             }
             SpUtils.putString("pref_mac", bluetoothData.mac)
             SpUtils.putString("pref_data", bluetoothData.data)
-            SpUtils.putString("pref_signal", bluetoothData.rssi)
+            SpUtils.putString("pref_rssi", bluetoothData.rssi)
         } catch (e: SardineException) {
             showMsg(R.string.webdav_error)
             return
@@ -151,7 +151,7 @@ class MainActivity : BaseActivity() {
         SpUtils.getString("pref_data", "").apply {
             binding.broadcastLabel.text = this
         }
-        SpUtils.getString("pref_signal", "").apply {
+        SpUtils.getString("pref_rssi", "").apply {
             binding.signalLabel.text = this
         }
         SpUtils.getBoolean("pref_enable_webdav", false).apply {

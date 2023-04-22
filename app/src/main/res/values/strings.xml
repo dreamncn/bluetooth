@@ -65,4 +65,5 @@
     <string name="ic_empty">Empty</string>
     <string name="filter">Filter</string>
     <string name="active_restart">You need to restart bluetooth after update plugin.</string>
+    <string name="nav_history">History</string>
 </resources>
