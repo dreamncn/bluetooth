@@ -40,12 +40,12 @@ class SettingsActivity : BaseActivity() {
 
 
          //匿名分析
-         SpUtils.getBoolean("setting_analyze",false).apply { binding.analyze.isChecked = this }
+         SpUtils.getBoolean("app_center_analyze",false).apply { binding.analyze.isChecked = this }
          binding.AnalyzeView.setOnClickListener {
              binding.analyze.isChecked = !binding.analyze.isChecked
-             SpUtils.putBoolean("setting_analyze",binding.analyze.isChecked )
+             SpUtils.putBoolean("app_center_analyze",binding.analyze.isChecked )
          }
-         binding.analyze.setOnCheckedChangeListener { _, isChecked ->  SpUtils.putBoolean("setting_analyze",isChecked ) }
+         binding.analyze.setOnCheckedChangeListener { _, isChecked ->  SpUtils.putBoolean("app_center_analyze",isChecked ) }
          //语言配置
          val languages: ArrayList<String> = ArrayList()
 
