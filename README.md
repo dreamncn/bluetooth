@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://socialify.git.ci/dreamncn/bluetooth/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&logo=https%3A%2F%2Fpic.dreamn.cn%2FuPic%2F2023_04_22_23_52_24_1682178744_1682178744595_CRaKET.png&name=1&pattern=Floating%20Cogs&pulls=1&stargazers=1&theme=Auto" alt="bluetooth" width="640" height="320" /></p>
 
- *Read this in other languages: English、[简体中文](readme/README.zh_CN.md).*
+ *Read this in other languages: English、[简体中文](README.zh_CN.md).*
 
 ## Introduction
 This is a tool for debugging low-power Bluetooth, which has functions such as Bluetooth discovery, vendor identification, data simulation, and data synchronization.
