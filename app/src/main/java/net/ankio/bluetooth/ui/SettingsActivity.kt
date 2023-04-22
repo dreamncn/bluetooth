@@ -37,7 +37,7 @@ class SettingsActivity : BaseActivity() {
          //toolbar 设置返回
         toolbar.setNavigationOnClickListener { finish(); }
          //匿名分析
-         SpUtils.getBoolean("app_center_analyze",false).apply { binding.analyze.isChecked = this }
+         SpUtils.getBoolean("app_center_analyze",true).apply { binding.analyze.isChecked = this }
          binding.AnalyzeView.setOnClickListener {
              binding.analyze.isChecked = !binding.analyze.isChecked
              SpUtils.putBoolean("app_center_analyze",binding.analyze.isChecked )
@@ -147,13 +147,24 @@ class SettingsActivity : BaseActivity() {
              binding.settingUseSystemTheme.visibility = View.GONE
          }
 
+         fun isUseSystemColor(systemColor:Boolean){
+             if (systemColor){
+                 binding.settingTheme.visibility = View.GONE
+             }else{
+                 binding.settingTheme.visibility = View.VISIBLE
+             }
+         }
+
          binding.systemColor.isChecked = ThemeEngine.getInstance(this).isDynamicTheme
+         isUseSystemColor(binding.systemColor.isChecked)
          binding.settingUseSystemTheme.setOnClickListener {
              ThemeEngine.getInstance(this).isDynamicTheme = !binding.alwaysDark.isChecked
              binding.alwaysDark.isChecked = !binding.alwaysDark.isChecked
          }
          binding.systemColor.setOnCheckedChangeListener { _, isChecked ->
+             isUseSystemColor(isChecked)
              ThemeEngine.getInstance(this).isDynamicTheme = isChecked
+             recreateInit()
          }
 
      }
