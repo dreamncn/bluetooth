@@ -70,8 +70,6 @@ open class BaseActivity : AppCompatActivity() {
                 if(scrollView is RecyclerView){
                     scrollYs = (scrollView as RecyclerView).computeVerticalScrollOffset();
                 }
-                Log.d(tag, "scrollView scrollYs =>$scrollYs")
-                Log.d(tag, "scrollView oldScrollY =>$oldScrollY")
 
                 if(animatorStart)return@setOnScrollChangeListener
 

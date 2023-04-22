@@ -66,4 +66,8 @@
     <string name="filter">Filter</string>
     <string name="active_restart">You need to restart bluetooth after update plugin.</string>
     <string name="nav_history">History</string>
+    <string name="server_name">Bluetooth Webdav Service is working</string>
+    <string name="start_webdav">Start Webdav Service</string>
+    <string name="server_error">Server not work.</string>
+    <string name="server_working">Server is working.</string>
 </resources>

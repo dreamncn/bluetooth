@@ -297,6 +297,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/webdav_panel"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -410,12 +411,12 @@
 
 
                             <Button
-                                android:id="@+id/save_webdav"
+                                android:id="@+id/start_webdav"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="@dimen/one_padding"
-                                android:text="@string/save_webdav"
+                                android:text="@string/start_webdav"
                                 tools:ignore="RelativeOverlap" />
                         </RelativeLayout>
 
