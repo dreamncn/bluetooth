@@ -35,8 +35,8 @@
     <string name="lang_follow_system">Follow system</string>
     <string name="setting_privacy">Privacy</string>
     <string name="setting_analysis">Anonymous analysis</string>
-    <string name="setting_analysis_desc">Use Tencent Bugly to send crash data to us</string>
-    <string name="translation_url">https://github.com/dreamncn/bluetooth</string>
+    <string name="setting_analysis_desc">We use Flurry to collect crash information</string>
+    <string name="translation_url" translatable="false">https://github.com/dreamncn/bluetooth</string>
     <string name="ok">OK</string>
     <string name="dialog_cannot_open_browser_title">Can\\\'t start browser</string>
     <string name="toast_copied_to_clipboard_with_text"><![CDATA[<b>%s</b> has been copied to clipboard.]]></string>
@@ -50,7 +50,7 @@
     <string name="please_input_username">Please input the username of Webdav:</string>
     <string name="webdav_no_sync">Not sync yet.</string>
     <string name="get_bluetooth_error">Sorry, Can\'t get bluetooth data from Webdav.</string>
-    <string name="webdav_error">Sorry, We can\'t connect the Webdav server, please check your password and username</string>
+    <string name="webdav_error">Sorry, We can\'t connect the Webdav server, please check your password and username.</string>
     <string name="webdav_enable">Enable webdav sync</string>
     <string name="scan_blue">Scan Bluetooth</string>
     <string name="start_scan">Start Scan</string>
@@ -64,15 +64,13 @@
     <string name="company_filter">Company filter</string>
     <string name="ic_empty">Empty</string>
     <string name="filter">Filter</string>
-    <string name="active_restart">You need to restart bluetooth after update plugin.</string>
     <string name="nav_history">History</string>
     <string name="server_name">Bluetooth Webdav Service is working</string>
-    <string name="start_webdav">Start Webdav Service</string>
     <string name="server_error">Server not work.</string>
     <string name="server_working">Server is working.</string>
     <string name="please_input_mac">Please input the mac address:</string>
     <string name="please_input_data">Please input the broadcast data:</string>
     <string name="please_input_rssi">Please input the rssi data</string>
-    <string name="description">A tool that can debug Bluetooth / 一个可以调试蓝牙的工具</string>
+    <string name="description" translatable="false">A tool that can debug Bluetooth / 一个可以调试蓝牙的工具</string>
     <string name="active_version">Sorry, we don\'t support frameworks with API version lower than 93. Please update Lsposed to the latest version.</string>
 </resources>
