@@ -139,6 +139,9 @@ class MainActivity : BaseActivity() {
         } catch (e: SardineException) {
             showMsg(R.string.webdav_error)
             return
+        }catch (e: NoSuchFieldError) {
+            showMsg(R.string.webdav_error)
+            return
         }
 
     }
@@ -155,13 +158,20 @@ class MainActivity : BaseActivity() {
             binding.signalLabel.text = this
         }
         SpUtils.getBoolean("pref_enable_webdav", false).apply {
+            if (this) {
+                binding.senderWebdav.visibility = View.VISIBLE
+            } else {
+                binding.senderWebdav.visibility = View.GONE
+
+            }
             binding.webdavEnable.isSelected = this
             binding.webdavEnable.setOnCheckedChangeListener { _, isChecked ->
                 SpUtils.putBoolean("pref_enable_webdav", isChecked)
                 if (isChecked) {
-                    binding.asSender.visibility = View.GONE
+                    binding.senderWebdav.visibility = View.VISIBLE
                 } else {
-                    binding.asSender.visibility = View.VISIBLE
+                    binding.senderWebdav.visibility = View.GONE
+
                 }
             }
         }
