@@ -1,19 +1,27 @@
 package net.ankio.bluetooth.ui
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
-import com.github.sardine.impl.SardineException
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.thegrizzlylabs.sardineandroid.impl.SardineException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.ankio.bluetooth.BuildConfig
 import net.ankio.bluetooth.R
+import net.ankio.bluetooth.service.SendWebdavServer
 import net.ankio.bluetooth.databinding.AboutDialogBinding
 import net.ankio.bluetooth.databinding.ActivityMainBinding
 import net.ankio.bluetooth.databinding.InputLayoutBinding
@@ -24,10 +32,13 @@ import rikka.html.text.toHtml
 
 
 class MainActivity : BaseActivity() {
+
     //视图绑定
     private lateinit var binding: ActivityMainBinding
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        tag = "MainActivity"
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         toolbarLayout = binding.toolbarLayout
@@ -37,12 +48,12 @@ class MainActivity : BaseActivity() {
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.theme -> {
-                  //  SettingsFragment().show(supportFragmentManager, "Settings")
+                    Log.i(tag,"setting menu click!")
                     start<SettingsActivity>()
                     true
                 }
                 R.id.more -> {
-
+                    Log.i(tag,"about menu click!")
                     val binding = AboutDialogBinding.inflate(LayoutInflater.from(this), null, false)
                     binding.sourceCode.movementMethod = LinkMovementMethod.getInstance()
                     binding.sourceCode.text = getString(
@@ -55,10 +66,8 @@ class MainActivity : BaseActivity() {
                         .setView(binding.root)
                         .show()
 
-
                     true
                 }
-
                 else -> false
             }
 
@@ -66,21 +75,31 @@ class MainActivity : BaseActivity() {
 
         onViewCreated()
 
-        binding.saveWebdav.setOnClickListener {
-            if (SpUtils.getBoolean("pref_as_sender", false)) {
-
-            } else {
-
-            }
+        binding.startWebdav.setOnClickListener {
+            serverConnect()
         }
         binding.search.setOnClickListener {
+
             start<ScanActivity>()
+        }
+
+    }
+
+    private fun serverConnect(){
+        if (SpUtils.getBoolean("pref_enable_webdav", false)) {
+
+            if (SpUtils.getBoolean("pref_as_sender", false)) {
+
+                startServer()
+            } else {
+
+                syncFromServer()
+            }
+            refreshStatus()
         }
     }
 
-    fun trySyncFromWebDav() {
 
-    }
 
     private fun setActive(@StringRes text: Int, @AttrRes backgroundColor:Int, @AttrRes textColor:Int, @DrawableRes drawable:Int){
         binding.active.setBackgroundColor(getThemeAttrColor(backgroundColor))
@@ -94,90 +113,111 @@ class MainActivity : BaseActivity() {
         binding.imageView.setColorFilter(getThemeAttrColor(textColor))
         binding.msgLabel.setTextColor(getThemeAttrColor(textColor))
     }
-    override fun onResume() {
-        super.onResume()
+    private fun refreshStatus(){
+        if (SpUtils.getBoolean("pref_enable_webdav", false)) {
+            if (SpUtils.getBoolean("pref_as_sender", false)) {
+                if(!SendWebdavServer.isRunning){
+                    setActive(R.string.server_error,com.google.android.material.R.attr.colorErrorContainer,com.google.android.material.R.attr.colorOnErrorContainer, R.drawable.ic_error)
+                }else{
+                    setActive(R.string.server_working,com.google.android.material.R.attr.colorPrimary,com.google.android.material.R.attr.colorOnPrimary,R.drawable.ic_success)
+                }
+                return
+            }
+        }
         if (HookUtils.getActiveAndSupportFramework()) {
             if(HookUtils.getAppVersion()!=BuildConfig.VERSION_CODE){
                 setActive(R.string.active_restart,com.google.android.material.R.attr.colorSecondary,com.google.android.material.R.attr.colorOnSecondary,R.drawable.ic_error)
                 return
             }
+
             setActive(R.string.active_success,com.google.android.material.R.attr.colorPrimary,com.google.android.material.R.attr.colorOnPrimary,R.drawable.ic_success)
         } else {
             setActive(R.string.active_error,com.google.android.material.R.attr.colorErrorContainer,com.google.android.material.R.attr.colorOnErrorContainer, R.drawable.ic_error)
         }
-
-
+    }
+    override fun onResume() {
+        super.onResume()
         setMacBluetoothData()
-
-        //如果是发送端，点击保存就启动定时发送服务
-        //如果是接收端，在显示同步按钮让用户手动同步/页面切换的时候同步
-        if (SpUtils.getBoolean("pref_enable_webdav", false)) {
-            if (SpUtils.getBoolean("pref_as_sender", false)) {
-                startServer()
-            } else {
-                getServer()
-            }
-        }
-
-
+        serverConnect()
     }
 
-    fun startServer() {
-
+    private fun startServer(){
+        stopServer()
+        if(!SendWebdavServer.isRunning){
+            Log.i(tag,"bluetooth server start!")
+            val intent = Intent(this, SendWebdavServer::class.java)
+            ContextCompat.startForegroundService(this, intent)
+        }
     }
 
-    private fun getServer() {
-        try {
-            val bluetoothData = WebdavUtils().getFromServer()
-            if (bluetoothData == null) {
-                showMsg(R.string.get_bluetooth_error)
-                return
-            }
-            SpUtils.putString("pref_mac", bluetoothData.mac)
-            SpUtils.putString("pref_data", bluetoothData.data)
-            SpUtils.putString("pref_rssi", bluetoothData.rssi)
-        } catch (e: SardineException) {
-            showMsg(R.string.webdav_error)
-            return
-        }catch (e: NoSuchFieldError) {
-            showMsg(R.string.webdav_error)
-            return
+    private fun stopServer(){
+        if(SendWebdavServer.isRunning){
+            Log.i(tag,"bluetooth server stop!")
+            val intent = Intent(this, SendWebdavServer::class.java)
+            this@MainActivity.stopService( intent)
         }
-
+    }
+    private fun syncFromServer(){
+        coroutineScope .launch(Dispatchers.IO) {
+            try {
+                // 在后台线程中执行网络操作
+                val bluetoothData  = WebdavUtils(SpUtils.getString("webdav_username", ""),SpUtils.getString("webdav_password", "")).getFromServer()
+                if(bluetoothData!=null){
+                    SpUtils.putString("pref_data",bluetoothData.data)
+                }
+                withContext(Dispatchers.Main) {
+                    setMacBluetoothData()
+                }
+            }catch (e: SardineException){
+                e.message?.let { Log.e(tag, it) }
+                withContext(Dispatchers.Main) {
+                    showMsg(R.string.webdav_error)
+                }
+            }
+        }
     }
 
 
     private fun setMacBluetoothData() {
         SpUtils.getString("pref_mac", "").apply {
+            Log.i(tag,"pref_mac = $this")
             binding.macLabel.text = this
         }
         SpUtils.getString("pref_data", "").apply {
+            Log.i(tag,"pref_data = $this")
             binding.broadcastLabel.text = this
         }
         SpUtils.getString("pref_rssi", "").apply {
+            Log.i(tag,"pref_rssi = $this")
             binding.signalLabel.text = this
         }
         SpUtils.getBoolean("pref_enable_webdav", false).apply {
+            Log.i(tag,"pref_enable_webdav = $this")
             if (this) {
+                binding.webdavPanel.visibility  = View.VISIBLE
                 binding.senderWebdav.visibility = View.VISIBLE
             } else {
                 binding.senderWebdav.visibility = View.GONE
-
+                binding.webdavPanel.visibility  = View.GONE
             }
-            binding.webdavEnable.isSelected = this
+            binding.webdavEnable.isChecked = this
+
             binding.webdavEnable.setOnCheckedChangeListener { _, isChecked ->
                 SpUtils.putBoolean("pref_enable_webdav", isChecked)
                 if (isChecked) {
                     binding.senderWebdav.visibility = View.VISIBLE
+                    binding.webdavPanel.visibility  = View.VISIBLE
                 } else {
                     binding.senderWebdav.visibility = View.GONE
+                    binding.webdavPanel.visibility  = View.GONE
 
                 }
+                serverConnect()
             }
         }
         //是否作为发送端
         SpUtils.getBoolean("pref_as_sender", false).apply {
-            binding.asSender.isSelected = this
+            binding.asSender.isChecked = this
             binding.asSender.setOnCheckedChangeListener { _, isChecked ->
                 SpUtils.putBoolean("pref_as_sender", isChecked)
                 if (isChecked) {
@@ -186,14 +226,16 @@ class MainActivity : BaseActivity() {
                 } else {
                     binding.enable.visibility = View.VISIBLE
                 }
+                serverConnect()
             }
 
         }
         //是否开启模拟
         SpUtils.getBoolean("pref_enable", false).apply {
-            binding.switchButton.isSelected = this
+            binding.switchButton.isChecked = this
             binding.switchButton.setOnCheckedChangeListener { _, isChecked ->
                 SpUtils.putBoolean("pref_enable", isChecked)
+                serverConnect()
             }
         }
         //配置信息
@@ -204,6 +246,7 @@ class MainActivity : BaseActivity() {
                     override fun onInput(value: String) {
                         SpUtils.putString("webdav_server", value)
                         binding.webdavLabel.text = value
+                        serverConnect()
                     }
                 })
             }
@@ -215,6 +258,7 @@ class MainActivity : BaseActivity() {
                     override fun onInput(value: String) {
                         SpUtils.putString("webdav_username", value)
                         binding.usernameLabel.text = value
+                        serverConnect()
                     }
                 })
             }
@@ -226,6 +270,7 @@ class MainActivity : BaseActivity() {
                     override fun onInput(value: String) {
                         SpUtils.putString("webdav_password", value)
                         binding.passwordLabel.text = value
+                        serverConnect()
                     }
                 })
             }
@@ -236,6 +281,9 @@ class MainActivity : BaseActivity() {
 
     }
 
+    /**
+     * 显示输入框
+     */
     private fun showInput(value: String, title: String, inputListener: InputListener) {
 
         val bottomSheetDialog = BottomSheetDialog(this)

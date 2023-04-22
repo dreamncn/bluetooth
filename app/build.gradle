@@ -78,12 +78,13 @@ dependencies {
     //Html转换
     implementation 'dev.rikka.rikkax.html:html-ktx:1.1.2'
     //webdav
-    implementation 'com.github.lookfirst:sardine:5.10'
+    implementation 'com.github.thegrizzlylabs:sardine-android:0.8'
     //匿名统计
     implementation 'com.flurry.android:analytics:14.2.0@aar'
     //gson
     implementation 'com.google.code.gson:gson:2.10.1'
-
+    //异步操作
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     //权限请求 支持Androidx
     implementation 'com.guolindev.permissionx:permissionx:1.7.1'
     //让你的适配器一目了然，告别代码冗余
