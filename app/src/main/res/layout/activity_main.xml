@@ -407,18 +407,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-
-                            <Button
-                                android:id="@+id/start_webdav"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="@dimen/one_padding"
-                                android:text="@string/start_webdav"
-                                tools:ignore="RelativeOverlap" />
-                        </RelativeLayout>
+                            android:orientation="horizontal"/>
 
 
                     </LinearLayout>

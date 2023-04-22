@@ -113,7 +113,7 @@ class ScanActivity : BaseActivity() {
             initView()
         } catch (e: NullPointerException) {
             e.message?.let { Log.e(tag, it) }
-            showMsg(getString(R.string.unsupport_bluetooth))
+            showMsg(getString(R.string.unsupported_bluetooth))
             finish()
         }
 

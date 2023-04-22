@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.AttrRes
@@ -28,22 +27,32 @@ import net.ankio.bluetooth.App
 import net.ankio.bluetooth.utils.ContextWrapper
 import net.ankio.bluetooth.utils.LocaleDelegate
 
-
+/**
+ * 基础的BaseActivity
+ */
 open class BaseActivity : AppCompatActivity() {
     lateinit var toolbarLayout: AppBarLayout
     lateinit var toolbar: MaterialToolbar
     lateinit var scrollView: View
     var tag = "BaseActivity"
+
+    /**
+     * 重构context
+     */
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase?.let {
             ContextWrapper.wrap(it, App.getLocale())
         })
         LocaleDelegate.changedList[this.javaClass] = true
     }
+
+    /**
+     * 在子activity手动调用该方法
+     */
     fun onViewCreated(){
         //主题初始化
         val themeMode = ThemeEngine.getInstance(this@BaseActivity).themeMode
-        //ThemeEngine.applyToActivity(this)
+
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         statusBar {
             fitWindow = false
@@ -51,23 +60,22 @@ open class BaseActivity : AppCompatActivity() {
             light =
                 !(themeMode == ThemeMode.DARK || (themeMode == ThemeMode.AUTO && currentNightMode == Configuration.UI_MODE_NIGHT_YES))
         }
+        //根据主题设置statusBar
         navigationBar { transparent() }
         if(::toolbarLayout.isInitialized){
             toolbarLayout.addStatusBarTopPadding()
         }
         if(::toolbarLayout.isInitialized && ::toolbar.isInitialized && ::scrollView.isInitialized){
-
-
             val theme = ThemeEngine.getInstance(this@BaseActivity).getTheme()
             val mStatusBarColor = getThemeAttrColor(this,theme,android.R.attr.colorBackground)
             var last = mStatusBarColor
             val mStatusBarColor2 =  getThemeAttrColor(this,theme,com.google.android.material.R.attr.colorSurfaceVariant)
             var animatorStart = false
-
-
+            //滚动页面调整toolbar颜色
             scrollView.setOnScrollChangeListener { view, _, scrollY, _, oldScrollY ->
-                var scrollYs = scrollY
+                var scrollYs = scrollY //获取宽度
                 if(scrollView is RecyclerView){
+                    //RecyclerView获取真实高度
                     scrollYs = (scrollView as RecyclerView).computeVerticalScrollOffset();
                 }
 
@@ -95,9 +103,17 @@ open class BaseActivity : AppCompatActivity() {
 
         }
     }
+
+    /**
+     * 获取主题色
+     */
     fun getThemeAttrColor( @AttrRes attrResId: Int): Int {
         return MaterialColors.getColor(ContextThemeWrapper(this, ThemeEngine.getInstance(this@BaseActivity).getTheme()), attrResId, Color.WHITE)
     }
+
+    /**
+     * 获取主题色
+     */
     @ColorInt
     fun getThemeAttrColor(context: Context, @StyleRes themeResId: Int, @AttrRes attrResId: Int): Int {
         return MaterialColors.getColor(ContextThemeWrapper(context, themeResId), attrResId, Color.WHITE)
@@ -105,15 +121,17 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        //判断页面是否需要重建
         if(!LocaleDelegate.changedList.keys.contains(this.javaClass) || LocaleDelegate.changedList[this.javaClass] == false){
             LocaleDelegate.changedList[this.javaClass] = true
             recreate()
         }
-
     }
 
-
-    open fun viewBackgroundGradientAnimation(view: View, fromColor: Int, toColor: Int, duration: Long = 600) {
+    /**
+     * toolbar颜色渐变动画
+     */
+    private fun viewBackgroundGradientAnimation(view: View, fromColor: Int, toColor: Int, duration: Long = 600) {
         val colorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), fromColor, toColor)
         colorAnimator.addUpdateListener { animation ->
             val color = animation.animatedValue as Int //之后就可以得到动画的颜色了
@@ -123,18 +141,26 @@ open class BaseActivity : AppCompatActivity() {
         colorAnimator.start()
     }
 
+    /**
+     * 切换activity
+     */
     inline fun <reified T : BaseActivity> Context.start() {
         val intent = Intent(this, T::class.java)
         startActivity(intent)
-
     }
 
+    /**
+     * 页面重新初始化
+     */
     fun recreateInit() {
         LocaleDelegate.changedList.clear()
         LocaleDelegate.changedList[this.javaClass] = true
         recreate()
     }
 
+    /**
+     * 显示信息
+     */
     fun showMsg(int: Int) {
         Toast.makeText(this, int, Toast.LENGTH_LONG).show()
     }

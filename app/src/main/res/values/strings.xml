@@ -57,7 +57,7 @@
     <string name="not_open_bluetooth">Please open the bluebooth</string>
     <string name="stop_scan">Stop scan</string>
     <string name="nav_filter">Filter</string>
-    <string name="unsupport_bluetooth">Unsupport bluetootn</string>
+    <string name="unsupported_bluetooth">Unsupported bluetooth</string>
     <string name="no_permission">No permission!</string>
     <string name="filter_empty">Filter empty name</string>
     <string name="signal_filter">Single Filter</string>
@@ -70,4 +70,7 @@
     <string name="start_webdav">Start Webdav Service</string>
     <string name="server_error">Server not work.</string>
     <string name="server_working">Server is working.</string>
+    <string name="please_input_mac">Please input the mac address:</string>
+    <string name="please_input_data">Please input the broadcast data:</string>
+    <string name="please_input_rssi">Please input the rssi data</string>
 </resources>

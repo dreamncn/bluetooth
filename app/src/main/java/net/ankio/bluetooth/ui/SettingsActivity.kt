@@ -1,9 +1,7 @@
 package net.ankio.bluetooth.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -36,9 +34,8 @@ class SettingsActivity : BaseActivity() {
     }
 
      private fun initView(){
+         //toolbar 设置返回
         toolbar.setNavigationOnClickListener { finish(); }
-
-
          //匿名分析
          SpUtils.getBoolean("app_center_analyze",false).apply { binding.analyze.isChecked = this }
          binding.AnalyzeView.setOnClickListener {
@@ -138,17 +135,14 @@ class SettingsActivity : BaseActivity() {
 
          binding.settingDark.setOnClickListener{ listPopupThemeWindow.show() }
 
-         //
+
          binding.alwaysDark.isChecked = ThemeEngine.getInstance(this).isTrueBlack
          binding.settingUseDarkTheme.setOnClickListener {
              ThemeEngine.getInstance(this).isTrueBlack = !binding.alwaysDark.isChecked
              binding.alwaysDark.isChecked = !binding.alwaysDark.isChecked
-          //   recreateInit()
          }
          binding.alwaysDark.setOnCheckedChangeListener { _, isChecked ->  ThemeEngine.getInstance(this).isTrueBlack =  isChecked //;recreateInit()
          }
-//
-
          if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S){
              binding.settingUseSystemTheme.visibility = View.GONE
          }
@@ -157,11 +151,9 @@ class SettingsActivity : BaseActivity() {
          binding.settingUseSystemTheme.setOnClickListener {
              ThemeEngine.getInstance(this).isDynamicTheme = !binding.alwaysDark.isChecked
              binding.alwaysDark.isChecked = !binding.alwaysDark.isChecked
-            // recreateInit()
          }
          binding.systemColor.setOnCheckedChangeListener { _, isChecked ->
              ThemeEngine.getInstance(this).isDynamicTheme = isChecked
-             //    ;recreateInit()
          }
 
      }

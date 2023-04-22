@@ -16,28 +16,23 @@ class Main : IXposedHookLoadPackage {
         return pref.getString(key, value) ?: ""
     }
 
-    fun getInt(key: String, value: Int): Int {
-        reload()
-        return pref.getInt(key, value)
-    }
+
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
         XposedBridge.log("$tag lpparam.packageName")
         if (lpparam == null || !lpparam.packageName.equals("com.android.bluetooth")) return
         XposedBridge.log("$tag 蓝牙模拟启动")
         reload()
-        //不模拟
-        /*if(!pref.getBoolean("pref_enable",false)){
+        if(!pref.getBoolean("pref_enable",false)){
             XposedBridge.log("$tag 关闭蓝牙模拟功能")
             return
-        }*/
-        val cClass =
-            XposedHelpers.findClass("com.android.bluetooth.gatt.GattService", lpparam.classLoader)
+        }
+        val cClass = XposedHelpers.findClass("com.android.bluetooth.gatt.GattService", lpparam.classLoader)
         val main = this
         XposedBridge.log("$tag class:$cClass")
         XposedHelpers.findAndHookMethod(cClass, "start", object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
-                var hAdditionalI: Handler? = null
+                var hAdditionalI: Handler?
                 val str = "handler"
                 hAdditionalI =
                     XposedHelpers.getAdditionalInstanceField(param.thisObject, str) as Handler?
@@ -47,21 +42,18 @@ class Main : IXposedHookLoadPackage {
                 XposedHelpers.setAdditionalInstanceField(param.thisObject, str, hAdditionalI)
                 val broadcast = BroadcastBluetooth(param, main, hAdditionalI)
                 XposedHelpers.setAdditionalInstanceField(param.thisObject, "runnable", broadcast)
-                hAdditionalI.postDelayed(broadcast, pref.getInt("pref_interval", 500).toLong())
+                hAdditionalI.postDelayed(broadcast, 500)
                 return
             }
-
             override fun beforeHookedMethod(param: MethodHookParam) {}
         })
         XposedHelpers.findAndHookMethod(cClass, "stop", object : XC_MethodHook() {
             override fun beforeHookedMethod(param: MethodHookParam) {
-                val oAdditionalI =
-                    XposedHelpers.getAdditionalInstanceField(param.thisObject, "handler")
+                val oAdditionalI = XposedHelpers.getAdditionalInstanceField(param.thisObject, "handler")
                 if (oAdditionalI !is Handler) {
                     return
                 }
-                val oAdditionalI1 =
-                    XposedHelpers.getAdditionalInstanceField(param.thisObject, "runnable")
+                val oAdditionalI1 = XposedHelpers.getAdditionalInstanceField(param.thisObject, "runnable")
                 if (oAdditionalI1 !is Runnable) {
                     return
                 }
@@ -81,33 +73,30 @@ class Main : IXposedHookLoadPackage {
         private var __main = main
         private var __param = param
         private var __handler = handler
-
         @SuppressLint("SuspiciousIndentation")
         override fun run() {
             val iOf = Integer.valueOf(0)
             XposedHelpers.callMethod(
                 __param.thisObject, "onScanResult",
-                Integer.valueOf(27), //eventType
-                iOf, //addressType
-                __main.getString(
-                    "pref_datapref_datapref_datapref_data",
-                    "76:A7:8A:67:66:C9"
-                ), //address
-                Integer.valueOf(1), //primaryPhy
-                iOf, //secondaryPhy
-                Integer.valueOf(255), //advertisingSid
-                Integer.valueOf(127), //txPower
-                Integer.valueOf(__main.getInt("pref_rssi", -50)),//rssi
-                iOf, //periodicAdvInt
+                0x1b, //eventType
+                0x00,
+                __main.getString("pref_mac", "76:A7:8A:67:66:C9"),
+                0x01, //primaryPhy
+                0x00, //secondaryPhy
+                0xff, //advertisingSid
+                0x7f, //txPower
+                __main.getString("pref_rssi", "-50").toInt(),//rssi
+                0x00, //periodicAdvInt
+
                 ByteUtils.hexStringToBytes(
                     __main.getString(
-                        "pref_datapref_data",
+                        "pref_data",
                         "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
                     )
                 ), //advData
-                __main.getString("pref_datapref_datapref_datapref_data", "76:A7:8A:67:66:C9")
+                __main.getString("pref_mac", "76:A7:8A:67:66:C9")
             )
-            __handler.postDelayed(this, __main.getInt("pref_interval", 500).toLong())
+            __handler.postDelayed(this, 500)
         }
     }
 

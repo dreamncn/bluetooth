@@ -48,17 +48,15 @@ class MainActivity : BaseActivity() {
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.theme -> {
-                    Log.i(tag,"setting menu click!")
                     start<SettingsActivity>()
                     true
                 }
                 R.id.more -> {
-                    Log.i(tag,"about menu click!")
                     val binding = AboutDialogBinding.inflate(LayoutInflater.from(this), null, false)
                     binding.sourceCode.movementMethod = LinkMovementMethod.getInstance()
                     binding.sourceCode.text = getString(
                         R.string.about_view_source_code,
-                        "<b><a href=\"https://github.com/RikkaApps/Shizuku\">GitHub</a></b>"
+                        "<b><a href=\"https://github.com/dreamncn/bluetooth\n\">GitHub</a></b>"
                     ).toHtml()
 
                     binding.versionName.text = packageManager.getPackageInfo(packageName, 0).versionName
@@ -72,35 +70,34 @@ class MainActivity : BaseActivity() {
             }
 
         }
-
-        onViewCreated()
-
-        binding.startWebdav.setOnClickListener {
-            serverConnect()
-        }
         binding.search.setOnClickListener {
-
             start<ScanActivity>()
         }
-
+        onViewCreated()
     }
 
+    /**
+     * 判断是否为发送端
+     */
+    private fun isSender(): Boolean {
+        return SpUtils.getBoolean("pref_enable_webdav", false) && SpUtils.getBoolean("pref_as_sender", false)
+    }
+
+    /**
+     * 尝试去启动服务
+     */
     private fun serverConnect(){
-        if (SpUtils.getBoolean("pref_enable_webdav", false)) {
-
-            if (SpUtils.getBoolean("pref_as_sender", false)) {
-
-                startServer()
-            } else {
-
-                syncFromServer()
-            }
-            refreshStatus()
+        if (isSender()) {
+            startServer()
+        }else{
+            stopServer()
+            syncFromServer()
         }
+        refreshStatus()
     }
-
-
-
+    /**
+     * 设置插件状态
+     */
     private fun setActive(@StringRes text: Int, @AttrRes backgroundColor:Int, @AttrRes textColor:Int, @DrawableRes drawable:Int){
         binding.active.setBackgroundColor(getThemeAttrColor(backgroundColor))
         binding.imageView.setImageDrawable(
@@ -113,25 +110,31 @@ class MainActivity : BaseActivity() {
         binding.imageView.setColorFilter(getThemeAttrColor(textColor))
         binding.msgLabel.setTextColor(getThemeAttrColor(textColor))
     }
+
+    /**
+     * 状态刷新
+     */
     private fun refreshStatus(){
-        if (SpUtils.getBoolean("pref_enable_webdav", false)) {
-            if (SpUtils.getBoolean("pref_as_sender", false)) {
-                if(!SendWebdavServer.isRunning){
-                    setActive(R.string.server_error,com.google.android.material.R.attr.colorErrorContainer,com.google.android.material.R.attr.colorOnErrorContainer, R.drawable.ic_error)
-                }else{
-                    setActive(R.string.server_working,com.google.android.material.R.attr.colorPrimary,com.google.android.material.R.attr.colorOnPrimary,R.drawable.ic_success)
-                }
-                return
+        //如果是发送端，判断服务状态
+        if (isSender()) {
+            Log.i(tag,"isServerRunning => ${SendWebdavServer.isRunning}")
+            if(!SendWebdavServer.isRunning){//判断服务是否运行
+                setActive(R.string.server_error,com.google.android.material.R.attr.colorErrorContainer,com.google.android.material.R.attr.colorOnErrorContainer, R.drawable.ic_error)
+            }else{
+                setActive(R.string.server_working,com.google.android.material.R.attr.colorPrimary,com.google.android.material.R.attr.colorOnPrimary,R.drawable.ic_success)
             }
-        }
-        if (HookUtils.getActiveAndSupportFramework()) {
+        //其他情况就判断插件是否运行
+        }else if (HookUtils.getActiveAndSupportFramework()) {
+            //如果插件中hook的版本与本地版本不一致则提醒用户进行更新
             if(HookUtils.getAppVersion()!=BuildConfig.VERSION_CODE){
                 setActive(R.string.active_restart,com.google.android.material.R.attr.colorSecondary,com.google.android.material.R.attr.colorOnSecondary,R.drawable.ic_error)
                 return
             }
-
+            //其他情况就是激活
             setActive(R.string.active_success,com.google.android.material.R.attr.colorPrimary,com.google.android.material.R.attr.colorOnPrimary,R.drawable.ic_success)
+
         } else {
+            //其他情况就是未激活
             setActive(R.string.active_error,com.google.android.material.R.attr.colorErrorContainer,com.google.android.material.R.attr.colorOnErrorContainer, R.drawable.ic_error)
         }
     }
@@ -141,15 +144,22 @@ class MainActivity : BaseActivity() {
         serverConnect()
     }
 
+    /**
+     * 启动服务
+     */
     private fun startServer(){
-        stopServer()
+        //如果服务没有启动先启动
         if(!SendWebdavServer.isRunning){
+            SendWebdavServer.isRunning = true
             Log.i(tag,"bluetooth server start!")
             val intent = Intent(this, SendWebdavServer::class.java)
             ContextCompat.startForegroundService(this, intent)
         }
     }
 
+    /**
+     * 停止服务
+     */
     private fun stopServer(){
         if(SendWebdavServer.isRunning){
             Log.i(tag,"bluetooth server stop!")
@@ -157,15 +167,22 @@ class MainActivity : BaseActivity() {
             this@MainActivity.stopService( intent)
         }
     }
+
+    /**
+     * 从服务端同步数据
+     */
     private fun syncFromServer(){
         coroutineScope .launch(Dispatchers.IO) {
             try {
                 // 在后台线程中执行网络操作
                 val bluetoothData  = WebdavUtils(SpUtils.getString("webdav_username", ""),SpUtils.getString("webdav_password", "")).getFromServer()
                 if(bluetoothData!=null){
+                    //只更新data，mac地址
                     SpUtils.putString("pref_data",bluetoothData.data)
+                    SpUtils.putString("pref_mac",bluetoothData.mac)
                 }
                 withContext(Dispatchers.Main) {
+                    //同步完成数据后，重绘页面
                     setMacBluetoothData()
                 }
             }catch (e: SardineException){
@@ -177,41 +194,70 @@ class MainActivity : BaseActivity() {
         }
     }
 
-
+    /**
+     * 设置页面
+     */
     private fun setMacBluetoothData() {
+        //蓝牙数据设置
         SpUtils.getString("pref_mac", "").apply {
-            Log.i(tag,"pref_mac = $this")
             binding.macLabel.text = this
+            binding.macLabel.setOnClickListener {
+                showInput(this, getString(R.string.please_input_mac), object : InputListener {
+                    override fun onInput(value: String) {
+                        SpUtils.putString("pref_mac", value)
+                        binding.macLabel.text = value
+                        serverConnect()
+                    }
+                })
+            }
         }
         SpUtils.getString("pref_data", "").apply {
-            Log.i(tag,"pref_data = $this")
             binding.broadcastLabel.text = this
+            binding.broadcastLabel.setOnClickListener {
+                showInput(this, getString(R.string.please_input_data), object : InputListener {
+                    override fun onInput(value: String) {
+                        SpUtils.putString("pref_data", value)
+                        binding.broadcastLabel.text = value
+                        serverConnect()
+                    }
+                })
+            }
         }
-        SpUtils.getString("pref_rssi", "").apply {
-            Log.i(tag,"pref_rssi = $this")
+        SpUtils.getString("pref_rssi", "-50").apply {
             binding.signalLabel.text = this
+            binding.signalLabel.setOnClickListener {
+                showInput(this, getString(R.string.please_input_rssi), object : InputListener {
+                    override fun onInput(value: String) {
+                        val result = if (value.toIntOrNull() in -100..0) {
+                            value
+                        } else {
+                            "-100"
+                        }
+                        SpUtils.putString("pref_rssi", result)
+                        binding.broadcastLabel.text = result
+                        serverConnect()
+                    }
+                })
+            }
         }
-        SpUtils.getBoolean("pref_enable_webdav", false).apply {
-            Log.i(tag,"pref_enable_webdav = $this")
-            if (this) {
+        //webdav页面显示设置
+        fun setWebdavPanel(showWebdav:Boolean){
+            if (showWebdav) {
                 binding.webdavPanel.visibility  = View.VISIBLE
                 binding.senderWebdav.visibility = View.VISIBLE
             } else {
                 binding.senderWebdav.visibility = View.GONE
                 binding.webdavPanel.visibility  = View.GONE
             }
+        }
+        //启用webdav
+        SpUtils.getBoolean("pref_enable_webdav", false).apply {
+            setWebdavPanel(this)
             binding.webdavEnable.isChecked = this
-
             binding.webdavEnable.setOnCheckedChangeListener { _, isChecked ->
                 SpUtils.putBoolean("pref_enable_webdav", isChecked)
-                if (isChecked) {
-                    binding.senderWebdav.visibility = View.VISIBLE
-                    binding.webdavPanel.visibility  = View.VISIBLE
-                } else {
-                    binding.senderWebdav.visibility = View.GONE
-                    binding.webdavPanel.visibility  = View.GONE
-
-                }
+                setWebdavPanel(isChecked)
+                //启用webdav重连服务
                 serverConnect()
             }
         }
