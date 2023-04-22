@@ -5,8 +5,6 @@ import android.util.Log
 import com.google.gson.Gson
 import com.thegrizzlylabs.sardineandroid.Sardine
 import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine
-import net.ankio.bluetooth.BuildConfig
-import net.ankio.bluetooth.R
 import net.ankio.bluetooth.bluetooth.BluetoothData
 import java.io.BufferedReader
 import java.io.InputStream
@@ -53,6 +51,7 @@ class WebdavUtils(username:String,password:String) {
 
     fun getFromServer(): BluetoothData? {
         if (sardine.exists(file)) {
+            SpUtils.putString("webdav_last",getTime())
             return Gson().fromJson(
                 convertInputStreamToString(sardine.get(file)),
                 BluetoothData::class.java
