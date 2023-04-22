@@ -239,6 +239,7 @@ class ScanActivity : BaseActivity() {
         arrayList.add(Manifest.permission.ACCESS_FINE_LOCATION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayList.add(Manifest.permission.BLUETOOTH_SCAN)
+            arrayList.add(Manifest.permission.BLUETOOTH_CONNECT)
         }
 
         PermissionX.init(this).permissions(arrayList)

@@ -1,6 +1,5 @@
 package net.ankio.bluetooth.hook
 
-import android.content.pm.PackageInfo
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
@@ -13,24 +12,23 @@ import net.ankio.bluetooth.BuildConfig
 class MainServer : IXposedHookLoadPackage {
     private val tag = "AnkioのBluetooth Main:"
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
-        if (lpparam == null || !lpparam.packageName.equals("net.ankio.bluetooth")) return
-        XposedBridge.log("$tag Hook App自己")
-        val cClass =
-            XposedHelpers.findClass("net.ankio.bluetooth.utils.HookUtils", lpparam.classLoader)
-        val main = this
+        if (lpparam == null || !lpparam.packageName.equals(BuildConfig.APPLICATION_ID)) return
+        XposedBridge.log("$tag Hook self")
+        val cClass = XposedHelpers.findClass("net.ankio.bluetooth.utils.HookUtils", lpparam.classLoader)
         XposedHelpers.findAndHookMethod(
             cClass,
             "getActiveAndSupportFramework",
             XC_MethodReplacement.returnConstant(true)
         )
 
+
         XposedHelpers.findAndHookMethod(
             cClass,
-            "getAppVersion"
+            "getXposedVersion"
             ,object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam?) {
                     // 获取应用程序的包信息
-                    param?.result = BuildConfig.VERSION_CODE
+                    param?.result = XposedBridge.getXposedVersion()
                 }
             }
         )

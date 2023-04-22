@@ -10,4 +10,7 @@ object HookUtils {
     fun getAppVersion(): Int {
         return BuildConfig.VERSION_CODE
     }
+    fun getXposedVersion():Int{
+        return 82
+    }
 }

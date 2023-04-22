@@ -9,7 +9,7 @@ import net.ankio.bluetooth.utils.ByteUtils
 
 
 class Main : IXposedHookLoadPackage {
-    val pref: XSharedPreferences = XSharedPreferences("net.ankio.bluetooth", "config")
+    private val pref: XSharedPreferences = XSharedPreferences("net.ankio.bluetooth", "config")
     private val tag = "AnkioのBluetooth :"
     fun getString(key: String, value: String?): String {
         reload()
@@ -21,6 +21,9 @@ class Main : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
         XposedBridge.log("$tag lpparam.packageName")
         if (lpparam == null || !lpparam.packageName.equals("com.android.bluetooth")) return
+
+
+
         XposedBridge.log("$tag 蓝牙模拟启动")
         reload()
         if(!pref.getBoolean("pref_enable",false)){
@@ -75,12 +78,12 @@ class Main : IXposedHookLoadPackage {
         private var __handler = handler
         @SuppressLint("SuspiciousIndentation")
         override fun run() {
-            val iOf = Integer.valueOf(0)
+            val mac = __main.getString("pref_mac", "76:A7:8A:67:66:C9")
             XposedHelpers.callMethod(
                 __param.thisObject, "onScanResult",
                 0x1b, //eventType
                 0x00,
-                __main.getString("pref_mac", "76:A7:8A:67:66:C9"),
+                mac,
                 0x01, //primaryPhy
                 0x00, //secondaryPhy
                 0xff, //advertisingSid
@@ -94,8 +97,9 @@ class Main : IXposedHookLoadPackage {
                         "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
                     )
                 ), //advData
-                __main.getString("pref_mac", "76:A7:8A:67:66:C9")
+                mac
             )
+            XposedBridge.log("${__main.tag} mock => $mac")
             __handler.postDelayed(this, 500)
         }
     }

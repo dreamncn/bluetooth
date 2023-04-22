@@ -91,7 +91,7 @@ class MainActivity : BaseActivity() {
             startServer()
         }else{
             stopServer()
-            syncFromServer()
+            if(SpUtils.getBoolean("pref_enable_webdav", false)) syncFromServer()
         }
         refreshStatus()
     }
@@ -125,11 +125,12 @@ class MainActivity : BaseActivity() {
             }
         //其他情况就判断插件是否运行
         }else if (HookUtils.getActiveAndSupportFramework()) {
-            //如果插件中hook的版本与本地版本不一致则提醒用户进行更新
-            if(HookUtils.getAppVersion()!=BuildConfig.VERSION_CODE){
-                setActive(R.string.active_restart,com.google.android.material.R.attr.colorSecondary,com.google.android.material.R.attr.colorOnSecondary,R.drawable.ic_error)
+            if(HookUtils.getXposedVersion() < 93){
+                setActive(R.string.active_version,com.google.android.material.R.attr.colorSecondary,com.google.android.material.R.attr.colorOnSecondary,R.drawable.ic_error)
                 return
             }
+
+            SpUtils.putInt("app_version",BuildConfig.VERSION_CODE)
             //其他情况就是激活
             setActive(R.string.active_success,com.google.android.material.R.attr.colorPrimary,com.google.android.material.R.attr.colorOnPrimary,R.drawable.ic_success)
 
