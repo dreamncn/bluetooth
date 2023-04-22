@@ -38,13 +38,7 @@ open class App : Application() {
         ThemeEngine.applyToActivities(this)
         //设置语言
         LocaleDelegate.defaultLocale = getLocale()
-      /*  LocaleDelegate.defaultLocale = getLocale()
-        val res = resources
-        val config = res.configuration;
-        config.setLocale(LocaleDelegate.defaultLocale)
-        Log.d("App","语言："+ (LocaleDelegate.defaultLocale?.displayName ?: "空"))
 
-        res.updateConfiguration(config, res.displayMetrics)*/
         //匿名统计
         if(SpUtils.getBoolean("app_center_analyze",true)){
             FlurryAgent.Builder()
