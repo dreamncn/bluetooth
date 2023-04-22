@@ -15,13 +15,11 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter.AnimationType
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -114,6 +112,7 @@ class ScanActivity : BaseActivity() {
             //初始化页面
             initView()
         } catch (e: NullPointerException) {
+            e.message?.let { Log.e(tag, it) }
             showMsg(getString(R.string.unsupport_bluetooth))
             finish()
         }
@@ -129,8 +128,12 @@ class ScanActivity : BaseActivity() {
      * 初始化
      */
     private fun initView() {
-        historyList = Gson().fromJson(SpUtils.getString("history",""), object : TypeToken<List<BleDevice>>() {}.type) as MutableList<BleDevice>
-        toolbar.setNavigationOnClickListener { finish(); }
+        val historyJson = SpUtils.getString("history", "")
+        val localHistoryList = Gson().fromJson(historyJson, object : TypeToken<List<BleDevice>>() {}.type)
+                as? MutableList<BleDevice> // 使用安全类型转换操作符as?
+        historyList = localHistoryList?:mutableListOf()
+
+      toolbar.setNavigationOnClickListener { finish(); }
         bleAdapter = BleDeviceAdapter(mList).apply {
             setOnItemClickListener { _, _, position ->
                 val bleDevice = mList[position]
