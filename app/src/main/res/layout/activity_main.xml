@@ -87,7 +87,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/padding"
-                app:cardCornerRadius="@dimen/radius">
+                app:cardBackgroundColor="?attr/colorSecondaryContainer"
+                app:cardCornerRadius="@dimen/radius"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -196,7 +198,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/padding"
-                app:cardCornerRadius="@dimen/radius">
+                app:cardBackgroundColor="?attr/colorSecondaryContainer"
+                app:cardCornerRadius="@dimen/radius"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -242,7 +246,6 @@
                         android:padding="@dimen/padding">
 
 
-
                         <LinearLayout
                             android:id="@+id/mac_layout"
                             android:layout_width="match_parent"
@@ -274,6 +277,7 @@
                                 style="@style/TextViewLineSub"
                                 android:text="@string/none_data" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/rssi_layout"
                             android:layout_width="match_parent"
@@ -302,6 +306,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/padding"
+                app:cardBackgroundColor="?attr/colorSecondaryContainer"
+                app:cardElevation="0dp"
                 app:cardMaxElevation="0dp">
 
                 <LinearLayout
@@ -407,7 +413,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal"/>
+                            android:orientation="horizontal" />
 
 
                     </LinearLayout>
