@@ -256,10 +256,21 @@
                                 style="@style/TextViewLine"
                                 android:text="@string/mac_data" />
 
-                            <TextView
-                                android:id="@+id/mac_label"
-                                style="@style/TextViewLineSub"
-                                android:text="@string/none_data" />
+                            <com.google.android.material.textfield.TextInputLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/one_padding"
+                                android:layout_marginBottom="@dimen/padding">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/mac_label"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
                         </LinearLayout>
 
                         <LinearLayout
@@ -272,10 +283,21 @@
                                 style="@style/TextViewLine"
                                 android:text="@string/broadcast_data" />
 
-                            <TextView
-                                android:id="@+id/broadcast_label"
-                                style="@style/TextViewLineSub"
-                                android:text="@string/none_data" />
+                            <com.google.android.material.textfield.TextInputLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/one_padding"
+                                android:layout_marginBottom="@dimen/padding">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/broadcast_label"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
                         </LinearLayout>
 
                         <LinearLayout
@@ -288,10 +310,33 @@
                                 style="@style/TextViewLine"
                                 android:text="@string/signal" />
 
-                            <TextView
-                                android:id="@+id/signal_label"
-                                style="@style/TextViewLineSub"
-                                android:text="@string/none_data" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="16dp">
+
+
+                                <com.google.android.material.slider.Slider
+                                    android:id="@+id/signal_label"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_marginEnd="12dp"
+                                    android:layout_weight="1"
+                                    android:progress="100"
+                                    android:valueFrom="40"
+                                    android:valueTo="100" />
+
+                                <TextView
+                                    android:id="@+id/tv_rssi"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="-100 dBm" />
+                            </LinearLayout>
+
+
                         </LinearLayout>
 
                     </LinearLayout>
@@ -363,11 +408,21 @@
                                 style="@style/TextViewLine"
                                 android:text="@string/webdav_data" />
 
-                            <TextView
-                                android:id="@+id/webdav_label"
-                                style="@style/TextViewLineSub"
-                                android:paddingBottom="@dimen/padding"
-                                android:text="@string/none_data" />
+                            <com.google.android.material.textfield.TextInputLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/one_padding"
+                                android:layout_marginBottom="@dimen/padding">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/webdav_label"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
                         </LinearLayout>
 
 
@@ -384,10 +439,21 @@
 
                                 android:text="@string/webdav_username" />
 
-                            <TextView
-                                android:id="@+id/username_label"
-                                style="@style/TextViewLineSub"
-                                android:text="@string/none_data" />
+                            <com.google.android.material.textfield.TextInputLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/one_padding"
+                                android:layout_marginBottom="@dimen/padding">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/username_label"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
                         </LinearLayout>
 
 
@@ -403,17 +469,25 @@
                                 style="@style/TextViewLine"
                                 android:text="@string/webdav_password" />
 
-                            <TextView
-                                android:id="@+id/password_label"
-                                style="@style/TextViewLineSub"
-                                android:text="@string/none_data" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/one_padding"
+                                android:layout_marginBottom="@dimen/padding">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/password_label"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
                         </LinearLayout>
 
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal" />
 
 
                     </LinearLayout>
