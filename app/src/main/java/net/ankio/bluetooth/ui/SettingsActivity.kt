@@ -1,5 +1,7 @@
 package net.ankio.bluetooth.ui
 
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -11,6 +13,7 @@ import com.quickersilver.themeengine.ThemeChooserDialogBuilder
 import com.quickersilver.themeengine.ThemeEngine
 import com.quickersilver.themeengine.ThemeMode
 import net.ankio.bluetooth.App
+import net.ankio.bluetooth.BuildConfig
 import net.ankio.bluetooth.R
 import net.ankio.bluetooth.databinding.SettingsActivityBinding
 import net.ankio.bluetooth.utils.CustomTabsHelper
@@ -166,6 +169,23 @@ class SettingsActivity : BaseActivity() {
              ThemeEngine.getInstance(this).isDynamicTheme = isChecked
              recreateInit()
          }
+
+         SpUtils.getBoolean("hide_icon",false).apply {
+             binding.hideIconSwitch.isChecked = this
+         }
+         fun setHideIcon(isChecked:Boolean){
+             SpUtils.putBoolean("hide_icon",isChecked)
+             val component = ComponentName(this, BuildConfig.APPLICATION_ID+".MainActivityLauncher")
+             val status =
+                 if (isChecked) PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                 else PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+             this.packageManager.setComponentEnabledSetting(component, status, PackageManager.DONT_KILL_APP)
+         }
+         binding.hideIcon.setOnClickListener {
+             binding.hideIconSwitch.isChecked = !binding.hideIconSwitch.isChecked
+             setHideIcon(binding.hideIconSwitch.isChecked )
+         }
+         binding.hideIconSwitch.setOnCheckedChangeListener { _, isChecked ->  setHideIcon(isChecked ) }
 
      }
 

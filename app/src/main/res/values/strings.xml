@@ -69,4 +69,5 @@
     <string name="description" translatable="false">A tool that can debug Bluetooth / 一个可以调试蓝牙的工具</string>
     <string name="active_version">Sorry, we don\'t support frameworks with API version lower than 93. Please update Lsposed to the latest version.</string>
     <string name="manual_increase">Manual Increase</string>
+    <string name="hide_icon">Hide icon from launcher</string>
 </resources>

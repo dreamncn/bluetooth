@@ -301,6 +301,39 @@
                     android:text="" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/hide_icon"
+                style="@style/SettingLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/one_padding"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="@dimen/one_padding"
+                    android:layout_toStartOf="@+id/hide_icon_switch"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hide_icon"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/hide_icon_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:checked="true"
+                    android:text="" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
