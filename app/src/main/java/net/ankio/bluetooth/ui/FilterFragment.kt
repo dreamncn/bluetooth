@@ -1,5 +1,6 @@
 package net.ankio.bluetooth.ui
 
+import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
@@ -8,15 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.quickersilver.themeengine.ThemeEngine
+import net.ankio.bluetooth.R
 import net.ankio.bluetooth.databinding.FragmentFilterBinding
 import net.ankio.bluetooth.utils.BleConstant
 import net.ankio.bluetooth.utils.SpUtils
 
-class FilterFragment : BottomSheetDialogFragment() {
+class FilterFragment : DialogFragment() {
 
-    private lateinit var themeEngine: ThemeEngine
+
 
     private lateinit var filterCloseInterface: FilterCloseInterface
     private var _binding: FragmentFilterBinding? = null
@@ -25,11 +29,22 @@ class FilterFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        themeEngine = ThemeEngine.getInstance(requireContext())
-        _binding = FragmentFilterBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        val inflater = LayoutInflater.from(requireContext())
+        _binding = FragmentFilterBinding.inflate(inflater, null, false)
+        builder.setView(binding.root)
+            .setTitle(R.string.filter)
+            .setPositiveButton(R.string.save_webdav) { _, _ ->
+                dismiss()
+            }
+
+        return builder.create()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.switchDeviceName.setOnCheckedChangeListener { _, isChecked ->
             SpUtils.putBoolean(
@@ -52,7 +67,6 @@ class FilterFragment : BottomSheetDialogFragment() {
             override fun afterTextChanged(s: Editable?) {}
 
         })
-        binding.save.setOnClickListener { dismiss() }
         //显示效果
         binding.switchDeviceName.isChecked = SpUtils.getBoolean(BleConstant.NULL_NAME)
         //对同一个值进行配置，显示在Seekbar和TextView上

@@ -226,6 +226,7 @@ class MainActivity : BaseActivity() {
         if(!insert){
             localHistoryList.add(BleDevice(pref_data,getString(R.string.manual_increase),pref_rssi.toInt(),pref_mac,""))
         }
+        SpUtils.putString("history",Gson().toJson(localHistoryList))
     }
 
     /**
@@ -281,7 +282,7 @@ class MainActivity : BaseActivity() {
         }
         SpUtils.getString("pref_rssi", "-50").apply {
             binding.signalLabel.value = -this.toFloat()
-            binding.tvRssi.text = "-" + this + " dBm"
+            binding.tvRssi.text =  this + " dBm"
             binding.signalLabel.addOnChangeListener { _, value, _ ->
                 binding.tvRssi.text = "-" + value.toInt().toString() + " dBm"
                 SpUtils.putString("pref_rssi", "-" + value.toInt().toString())

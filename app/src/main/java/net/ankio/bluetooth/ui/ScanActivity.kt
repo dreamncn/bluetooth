@@ -168,6 +168,8 @@ class ScanActivity : BaseActivity() {
             if(it.itemId == R.id.filter){
                 val _scan = isScanning
                 stopScan()
+
+
                 FilterFragment().setOnCloseListener(object : FilterCloseInterface {
                     override fun onClose() {
                         if (_scan) scan()

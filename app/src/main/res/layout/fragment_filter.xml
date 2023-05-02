@@ -5,16 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="@dimen/padding"
-        android:text="@string/filter"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textStyle="bold" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,20 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:padding="@dimen/padding">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorPrimary"
-            android:textColor="?attr/colorOnPrimary"
-            android:layout_alignParentEnd="true"
-            android:text="@string/save_webdav"
-             />
-
-
-    </RelativeLayout>
+        android:padding="@dimen/padding"/>
 
 
 </LinearLayout>
