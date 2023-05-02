@@ -3,6 +3,8 @@ package net.ankio.bluetooth.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,8 +14,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.thegrizzlylabs.sardineandroid.impl.SardineException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,14 +26,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.ankio.bluetooth.BuildConfig
 import net.ankio.bluetooth.R
-import net.ankio.bluetooth.service.SendWebdavServer
+import net.ankio.bluetooth.bluetooth.BleDevice
 import net.ankio.bluetooth.databinding.AboutDialogBinding
 import net.ankio.bluetooth.databinding.ActivityMainBinding
 import net.ankio.bluetooth.databinding.InputLayoutBinding
+import net.ankio.bluetooth.service.SendWebdavServer
+import net.ankio.bluetooth.utils.BleConstant
 import net.ankio.bluetooth.utils.HookUtils
 import net.ankio.bluetooth.utils.SpUtils
 import net.ankio.bluetooth.utils.WebdavUtils
 import rikka.html.text.toHtml
+import java.util.ArrayList
 
 
 class MainActivity : BaseActivity() {
@@ -195,60 +203,101 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    fun saveToLocal(){
+        val historyJson = SpUtils.getString("history", "")
+        var localHistoryList = Gson().fromJson(historyJson, object : TypeToken<List<BleDevice>>() {}.type)
+                as? MutableList<BleDevice>
+        if(localHistoryList==null){
+            localHistoryList = ArrayList()
+        }
+       val pref_data =  SpUtils.getString("pref_data", "")
+        val pref_mac =   SpUtils.getString("pref_mac", "")
+        val pref_rssi =  SpUtils.getString("pref_rssi", "")
+        var insert = false
+        localHistoryList.forEach {
+            if(it.address.equals(pref_mac)){
+                localHistoryList.remove(it)
+                it.data = pref_data
+                it.rssi = pref_rssi.toInt()
+                localHistoryList.add(it)
+                insert = true
+            }
+        }
+        if(!insert){
+            localHistoryList.add(BleDevice(pref_data,getString(R.string.manual_increase),pref_rssi.toInt(),pref_mac,""))
+        }
+    }
+
     /**
      * 设置页面
      */
     private fun setMacBluetoothData() {
         //蓝牙数据设置
         SpUtils.getString("pref_mac", "").apply {
-            binding.macLabel.text = this
-            binding.macLabel.setOnClickListener {
-                showInput(this, getString(R.string.please_input_mac), object : InputListener {
-                    override fun onInput(value: String) {
-                        SpUtils.putString("pref_mac", value)
-                        binding.macLabel.text = value
-                        serverConnect()
-                    }
-                })
-            }
+            binding.macLabel.setText(this)
+            binding.macLabel.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    SpUtils.putString("pref_mac", s.toString())
+                    saveToLocal()
+                    serverConnect()
+                }
+            })
+
         }
         SpUtils.getString("pref_data", "").apply {
-            binding.broadcastLabel.text = this
-            binding.broadcastLabel.setOnClickListener {
-                showInput(this, getString(R.string.please_input_data), object : InputListener {
-                    override fun onInput(value: String) {
-                        SpUtils.putString("pref_data", value)
-                        binding.broadcastLabel.text = value
-                        serverConnect()
-                    }
-                })
-            }
+            binding.broadcastLabel.setText(this)
+            binding.broadcastLabel.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    SpUtils.putString("pref_data", s.toString())
+                    saveToLocal()
+                    serverConnect()
+                }
+            })
+
         }
         SpUtils.getString("pref_rssi", "-50").apply {
-            binding.signalLabel.text = this
-            binding.signalLabel.setOnClickListener {
-                showInput(this, getString(R.string.please_input_rssi), object : InputListener {
-                    override fun onInput(value: String) {
-                        val result = if (value.toIntOrNull() in -100..0) {
-                            value
-                        } else {
-                            "-100"
-                        }
-                        SpUtils.putString("pref_rssi", result)
-                        binding.broadcastLabel.text = result
-                        serverConnect()
-                    }
-                })
+            binding.signalLabel.value = -this.toFloat()
+            binding.tvRssi.text = "-" + this + " dBm"
+            binding.signalLabel.addOnChangeListener { _, value, _ ->
+                binding.tvRssi.text = "-" + value.toInt().toString() + " dBm"
+                SpUtils.putString("pref_rssi", "-" + value.toInt().toString())
+                saveToLocal()
+                serverConnect()
             }
+
         }
         //webdav页面显示设置
-        fun setWebdavPanel(showWebdav:Boolean){
+        fun setWebdavPanel(showWebdav: Boolean) {
             if (showWebdav) {
-                binding.webdavPanel.visibility  = View.VISIBLE
+                binding.webdavPanel.visibility = View.VISIBLE
                 binding.senderWebdav.visibility = View.VISIBLE
             } else {
                 binding.senderWebdav.visibility = View.GONE
-                binding.webdavPanel.visibility  = View.GONE
+                binding.webdavPanel.visibility = View.GONE
             }
         }
         //启用webdav
@@ -287,69 +336,75 @@ class MainActivity : BaseActivity() {
         }
         //配置信息
         SpUtils.getString("webdav_server", "https://dav.jianguoyun.com/dav/").apply {
-            binding.webdavLabel.text = this
-            binding.webdavLabelArea.setOnClickListener {
-                showInput(this, getString(R.string.please_input_webdav), object : InputListener {
-                    override fun onInput(value: String) {
-                        SpUtils.putString("webdav_server", value)
-                        binding.webdavLabel.text = value
-                        serverConnect()
-                    }
-                })
-            }
+            binding.webdavLabel.setText(this)
+            binding.webdavLabel.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    SpUtils.putString("webdav_server", s.toString())
+                    serverConnect()
+                }
+            })
+
         }
         SpUtils.getString("webdav_username", "").apply {
-            binding.usernameLabel.text = this
-            binding.usernameLabelArea.setOnClickListener {
-                showInput(this, getString(R.string.please_input_username), object : InputListener {
-                    override fun onInput(value: String) {
-                        SpUtils.putString("webdav_username", value)
-                        binding.usernameLabel.text = value
-                        serverConnect()
-                    }
-                })
-            }
+            binding.usernameLabel.setText(this)
+            binding.usernameLabel.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    SpUtils.putString("webdav_username", s.toString())
+                    serverConnect()
+                }
+            })
+
         }
         SpUtils.getString("webdav_password", "").apply {
-            binding.passwordLabel.text = this
-            binding.passwordLabelArea.setOnClickListener {
-                showInput(this, getString(R.string.please_input_webdav), object : InputListener {
-                    override fun onInput(value: String) {
-                        SpUtils.putString("webdav_password", value)
-                        binding.passwordLabel.text = value
-                        serverConnect()
-                    }
-                })
-            }
+            binding.passwordLabel.setText(this)
+            binding.passwordLabel.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    SpUtils.putString("webdav_password", s.toString())
+                    serverConnect()
+                }
+            })
+
         }
         SpUtils.getString("webdav_last", getString(R.string.webdav_no_sync)).apply {
             binding.lastDate.text = this
         }
 
     }
-
-    /**
-     * 显示输入框
-     */
-    private fun showInput(value: String, title: String, inputListener: InputListener) {
-
-        val bottomSheetDialog = BottomSheetDialog(this)
-        val sheetBinding = InputLayoutBinding.inflate(layoutInflater)
-        sheetBinding.title.text = title
-        sheetBinding.input.setText(value)
-        sheetBinding.submit.setOnClickListener {
-            inputListener.onInput(sheetBinding.input.text.toString())
-            bottomSheetDialog.dismiss()
-        }
-        bottomSheetDialog.setContentView(sheetBinding.root)
-
-        bottomSheetDialog.show()
-
-    }
-
-    interface InputListener {
-        fun onInput(value: String)
-    }
-
 
 }

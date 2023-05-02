@@ -1,6 +1,7 @@
 package net.ankio.bluetooth.hook
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import de.robv.android.xposed.*
@@ -79,26 +80,50 @@ class Main : IXposedHookLoadPackage {
         @SuppressLint("SuspiciousIndentation")
         override fun run() {
             val mac = __main.getString("pref_mac", "76:A7:8A:67:66:C9")
-            XposedHelpers.callMethod(
-                __param.thisObject, "onScanResult",
-                0x1b, //eventType
-                0x00,
-                mac,
-                0x01, //primaryPhy
-                0x00, //secondaryPhy
-                0xff, //advertisingSid
-                0x7f, //txPower
-                __main.getString("pref_rssi", "-50").toInt(),//rssi
-                0x00, //periodicAdvInt
 
-                ByteUtils.hexStringToBytes(
-                    __main.getString(
-                        "pref_data",
-                        "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.S){
+                XposedHelpers.callMethod(
+                    __param.thisObject, "onScanResult",
+                    0x1b, //eventType
+                    0x00,
+                    mac,
+                    0x01, //primaryPhy
+                    0x00, //secondaryPhy
+                    0xff, //advertisingSid
+                    0x7f, //txPower
+                    __main.getString("pref_rssi", "-50").toInt(),//rssi
+                    0x00, //periodicAdvInt
+
+                    ByteUtils.hexStringToBytes(
+                        __main.getString(
+                            "pref_data",
+                            "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
+                        )
+                    ), //advData
+                    mac
+                )
+            }else{
+                XposedHelpers.callMethod(
+                    __param.thisObject, "onScanResult",
+                    0x1b, //eventType
+                    0x00,
+                    mac,
+                    0x01, //primaryPhy
+                    0x00, //secondaryPhy
+                    0xff, //advertisingSid
+                    0x7f, //txPower
+                    __main.getString("pref_rssi", "-50").toInt(),//rssi
+                    0x00, //periodicAdvInt
+
+                    ByteUtils.hexStringToBytes(
+                        __main.getString(
+                            "pref_data",
+                            "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
+                        )
                     )
-                ), //advData
-                mac
-            )
+                )
+            }
+
             XposedBridge.log("${__main.tag} mock => $mac")
             __handler.postDelayed(this, 500)
         }
