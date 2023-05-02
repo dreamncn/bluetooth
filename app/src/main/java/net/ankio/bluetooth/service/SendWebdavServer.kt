@@ -1,5 +1,6 @@
 package net.ankio.bluetooth.service
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,11 +13,13 @@ import android.bluetooth.le.ScanResult
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +29,7 @@ import net.ankio.bluetooth.utils.ByteUtils
 import net.ankio.bluetooth.utils.SpUtils
 import net.ankio.bluetooth.utils.WebdavUtils
 
-@SuppressWarnings("MissingPermission")
+
 class SendWebdavServer : Service() {
     companion object {
         var isRunning = false
@@ -104,6 +107,13 @@ class SendWebdavServer : Service() {
      private fun startScan() {
         if (bluetoothAdapter.isEnabled) {
             Log.i(TAG, "Start scanning...")
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_SCAN
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                         return
+            }
             bluetoothAdapter.bluetoothLeScanner.startScan(scanCallback)
             Handler(Looper.getMainLooper()).postDelayed({
                 startScan()
@@ -119,6 +129,13 @@ class SendWebdavServer : Service() {
 
     private fun stopScan() {
         Log.i(TAG, "Stop scanning")
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
     }
 
