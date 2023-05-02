@@ -29,8 +29,6 @@
     <string name="setting_help_translation">帮助我们将蓝牙调试翻译成你的语言</string>
     <string name="setting_title">"设置 "</string>
     <string name="setting_network">网络</string>
-    <string name="setting_dns">安全DNS</string>
-    <string name="setting_dns_desc">解决某些国家的DNS投毒问题</string>
     <string name="lang_follow_system">跟随系统</string>
     <string name="setting_privacy">隐私</string>
     <string name="setting_analysis">匿名分析</string>
@@ -42,11 +40,11 @@
     <string name="default_theme">默认主题</string>
     <string name="always_off">总是关闭</string>
     <string name="always_on">总是开启</string>
-    <string name="active_success">插件已激活。</string>
+    <string name="active_success">插件已激活</string>
     <string name="submit">提交</string>
     <string name="please_input_webdav">请输入Webdav服务商地址：</string>
     <string name="please_input_username">请输入Webdav用户名：</string>
-    <string name="webdav_no_sync">从未同步过。</string>
+    <string name="webdav_no_sync">从未同步过</string>
     <string name="get_bluetooth_error">抱歉，无法从Webdav获取蓝牙数据。</string>
     <string name="webdav_error">抱歉，我们无法连接Webdav服务器，请检查您的密码和用户名。</string>
     <string name="webdav_enable">启用Webdav同步</string>
@@ -64,10 +62,8 @@
     <string name="filter">过滤</string>
     <string name="nav_history">历史记录</string>
     <string name="server_name">蓝牙Webdav上报服务运行中</string>
-    <string name="server_error">服务未启动。</string>
-    <string name="server_working">服务已启动。</string>
-    <string name="please_input_mac">请输入mac地址：</string>
-    <string name="please_input_data">请输入广播数据：</string>
-    <string name="please_input_rssi">请输入信号强度：</string>
+    <string name="server_error">服务未启动</string>
+    <string name="server_working">服务已启动</string>
     <string name="active_version">很抱歉，我们不支持API版本低于93的框架。请将Lsposed更新到最新版本。</string>
+    <string name="manual_increase">手动增加</string>
 </resources>
