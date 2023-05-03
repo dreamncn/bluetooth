@@ -212,19 +212,21 @@ class MainActivity : BaseActivity() {
         }
        val pref_data =  SpUtils.getString("pref_data", "")
         val pref_mac =   SpUtils.getString("pref_mac", "")
-        val pref_rssi =  SpUtils.getString("pref_rssi", "")
+        val pref_rssi =  SpUtils.getString("pref_rssi", "-50")
+        var value = pref_rssi
+        if(value==null||value=="")value="0"
         var insert = false
         localHistoryList.forEach {
             if(it.address.equals(pref_mac)){
                 localHistoryList.remove(it)
                 it.data = pref_data
-                it.rssi = pref_rssi.toInt()
+                it.rssi = value.toInt()
                 localHistoryList.add(it)
                 insert = true
             }
         }
         if(!insert){
-            localHistoryList.add(BleDevice(pref_data,getString(R.string.manual_increase),pref_rssi.toInt(),pref_mac,""))
+            localHistoryList.add(BleDevice(pref_data,getString(R.string.manual_increase),value.toInt(),pref_mac,""))
         }
         SpUtils.putString("history",Gson().toJson(localHistoryList))
     }
@@ -281,7 +283,9 @@ class MainActivity : BaseActivity() {
 
         }
         SpUtils.getString("pref_rssi", "-50").apply {
-            binding.signalLabel.value = -this.toFloat()
+            var value = this
+            if(value==null||value=="")value="0"
+            binding.signalLabel.value = -value.toFloat()
             binding.tvRssi.text =  this + " dBm"
             binding.signalLabel.addOnChangeListener { _, value, _ ->
                 binding.tvRssi.text = "-" + value.toInt().toString() + " dBm"
