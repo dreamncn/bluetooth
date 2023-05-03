@@ -284,9 +284,9 @@ class MainActivity : BaseActivity() {
         }
         SpUtils.getString("pref_rssi", "-50").apply {
             var value = this
-            if(value==null||value=="")value="0"
+            if(value=="")value="0"
             binding.signalLabel.value = -value.toFloat()
-            binding.tvRssi.text =  this + " dBm"
+            binding.tvRssi.text =  value + " dBm"
             binding.signalLabel.addOnChangeListener { _, value, _ ->
                 binding.tvRssi.text = "-" + value.toInt().toString() + " dBm"
                 SpUtils.putString("pref_rssi", "-" + value.toInt().toString())
