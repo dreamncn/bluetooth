@@ -223,19 +223,21 @@ class MainActivity : BaseActivity() {
         var value = pref_rssi
         if(value==null||value=="")value="0"
         var insert = false
+        var saveHistory = ArrayList<BleDevice>()
         localHistoryList.forEach {
             if(it.address == pref_mac){
-                localHistoryList.remove(it)
                 it.data = pref_data
                 it.rssi = value.toInt()
-                localHistoryList.add(it)
+                saveHistory.add(it)
                 insert = true
+            }else{
+                saveHistory.add(it)
             }
         }
         if(!insert){
-            localHistoryList.add(BleDevice(pref_data,getString(R.string.manual_increase),value.toInt(),pref_mac,""))
+            saveHistory.add(BleDevice(pref_data,getString(R.string.manual_increase),value.toInt(),pref_mac,""))
         }
-        SpUtils.putString("history",Gson().toJson(localHistoryList))
+        SpUtils.putString("history",Gson().toJson(saveHistory))
     }
 
     /**
