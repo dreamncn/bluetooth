@@ -239,6 +239,7 @@ class ScanActivity : BaseActivity() {
     private fun requestPermission() {
         val arrayList = ArrayList<String>()
         arrayList.add(Manifest.permission.ACCESS_FINE_LOCATION)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayList.add(Manifest.permission.BLUETOOTH_SCAN)
             arrayList.add(Manifest.permission.BLUETOOTH_CONNECT)
@@ -273,7 +274,12 @@ class ScanActivity : BaseActivity() {
         isScanning = true
         addressList.clear()
         mList.clear()
-        defaultAdapter.bluetoothLeScanner.startScan(scanCallback)
+        try{
+            defaultAdapter.bluetoothLeScanner.startScan(scanCallback)
+        }catch (_:SecurityException){
+            showMsg(R.string.no_permission);return;
+        }
+
         binding.progressBar.visibility = View.VISIBLE
         binding.fabAdd.text = getString(R.string.stop_scan)
         binding.fabAdd.icon = AppCompatResources.getDrawable(this, R.drawable.ic_bluetooth_close)
@@ -293,7 +299,11 @@ class ScanActivity : BaseActivity() {
         }
         if (isScanning) {
             isScanning = false
-            defaultAdapter.bluetoothLeScanner.stopScan(scanCallback)
+           try{
+               defaultAdapter.bluetoothLeScanner.stopScan(scanCallback)
+           }catch (_:SecurityException){
+               showMsg(R.string.no_permission);return;
+           }
             binding.progressBar.visibility = View.INVISIBLE
             binding.fabAdd.text = getString(R.string.start_scan)
             binding.fabAdd.icon = AppCompatResources.getDrawable(this, R.drawable.ic_bluetooth_scan)

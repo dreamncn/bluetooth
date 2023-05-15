@@ -28,6 +28,7 @@ import net.ankio.bluetooth.R
 import net.ankio.bluetooth.utils.ByteUtils
 import net.ankio.bluetooth.utils.SpUtils
 import net.ankio.bluetooth.utils.WebdavUtils
+import java.lang.Exception
 
 
 class SendWebdavServer : Service() {
@@ -73,18 +74,23 @@ class SendWebdavServer : Service() {
                     Log.i(TAG, "Found device: $deviceAddress")
                     val scanRecord = result.scanRecord?.bytes ?: return
                     val coroutineScope = CoroutineScope(Dispatchers.Main)
-                    coroutineScope .launch(Dispatchers.IO) {
-                        WebdavUtils(
-                            SpUtils.getString("webdav_username", ""),
-                            SpUtils.getString("webdav_password", "")
-                        ).sendToServer(
-                            net.ankio.bluetooth.bluetooth.BluetoothData(
-                                ByteUtils.byteArrayToHexString(scanRecord),
-                                deviceAddress,
-                                "-50"
+                    try {
+                        coroutineScope .launch(Dispatchers.IO) {
+                            WebdavUtils(
+                                SpUtils.getString("webdav_username", ""),
+                                SpUtils.getString("webdav_password", "")
+                            ).sendToServer(
+                                net.ankio.bluetooth.bluetooth.BluetoothData(
+                                    ByteUtils.byteArrayToHexString(scanRecord),
+                                    deviceAddress,
+                                    "-50"
+                                )
                             )
-                        )
+                        }
+                    }catch (_:Exception){
+                        Log.i(TAG, "WebdavException")
                     }
+
                 }else{
                     Log.i(TAG, "Device: ${result.device.address}")
                 }
@@ -136,7 +142,11 @@ class SendWebdavServer : Service() {
         ) {
             return
         }
-        bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
+        try{
+            bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
+        }catch (_:Exception){
+
+        }
     }
 
     private fun createNotificationChannel() {

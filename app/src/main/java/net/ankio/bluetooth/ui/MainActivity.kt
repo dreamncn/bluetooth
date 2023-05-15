@@ -36,6 +36,7 @@ import net.ankio.bluetooth.utils.HookUtils
 import net.ankio.bluetooth.utils.SpUtils
 import net.ankio.bluetooth.utils.WebdavUtils
 import rikka.html.text.toHtml
+import java.lang.Exception
 import java.util.ArrayList
 
 
@@ -99,7 +100,13 @@ class MainActivity : BaseActivity() {
             startServer()
         }else{
             stopServer()
-            if(SpUtils.getBoolean("pref_enable_webdav", false)) syncFromServer()
+            if(SpUtils.getBoolean("pref_enable_webdav", false)){
+               try {
+                   syncFromServer()
+               }catch (_:Exception){
+                   showMsg(R.string.webdav_error);
+               }
+            }
         }
         refreshStatus()
     }
@@ -217,7 +224,7 @@ class MainActivity : BaseActivity() {
         if(value==null||value=="")value="0"
         var insert = false
         localHistoryList.forEach {
-            if(it.address.equals(pref_mac)){
+            if(it.address == pref_mac){
                 localHistoryList.remove(it)
                 it.data = pref_data
                 it.rssi = value.toInt()
