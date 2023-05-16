@@ -81,48 +81,38 @@ class Main : IXposedHookLoadPackage {
         override fun run() {
             val mac = __main.getString("pref_mac", "76:A7:8A:67:66:C9")
 
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.S){
-                XposedHelpers.callMethod(
-                    __param.thisObject, "onScanResult",
-                    0x1b, //eventType
-                    0x00,
-                    mac,
-                    0x01, //primaryPhy
-                    0x00, //secondaryPhy
-                    0xff, //advertisingSid
-                    0x7f, //txPower
-                    __main.getString("pref_rssi", "-50").toInt(),//rssi
-                    0x00, //periodicAdvInt
-
-                    ByteUtils.hexStringToBytes(
-                        __main.getString(
-                            "pref_data",
-                            "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
-                        )
-                    ), //advData
-                    mac
-                )
-            }else{
-                XposedHelpers.callMethod(
-                    __param.thisObject, "onScanResult",
-                    0x1b, //eventType
-                    0x00,
-                    mac,
-                    0x01, //primaryPhy
-                    0x00, //secondaryPhy
-                    0xff, //advertisingSid
-                    0x7f, //txPower
-                    __main.getString("pref_rssi", "-50").toInt(),//rssi
-                    0x00, //periodicAdvInt
-
-                    ByteUtils.hexStringToBytes(
-                        __main.getString(
-                            "pref_data",
-                            "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
-                        )
+            val params = arrayOf(
+                0x1b, //eventType
+                0x00,
+                mac,
+                0x01, //primaryPhy
+                0x00, //secondaryPhy
+                0xff, //advertisingSid
+                0x7f, //txPower
+                __main.getString("pref_rssi", "-50").toInt(), //rssi
+                0x00, //periodicAdvInt
+                ByteUtils.hexStringToBytes(
+                    __main.getString(
+                        "pref_data",
+                        "02010403033CFE17FF0001B500024271A7B6000000C983926CB1011000000000000000000000000000000000000000000000000000000000000000000000"
                     )
-                )
+                ),
+                mac
+            )
+
+            try {
+                XposedHelpers.callMethod(__param.thisObject, "onScanResult", *params)
+            } catch (e: NoSuchMethodError) {
+                try {
+                    XposedHelpers.callMethod(__param.thisObject, "onScanResult", *params.copyOf(params.size - 1))
+                } catch (e: NoSuchMethodError) {
+                    // 处理最终的异常情况
+                    XposedBridge.log("${__main.tag} 您的设备不支持，请提取com.android.bluetooth文件提交至github")
+                    XposedBridge.log("${__main.tag} 异常：${e.message}" )
+                    return
+                }
             }
+
 
             XposedBridge.log("${__main.tag} mock => $mac")
             __handler.postDelayed(this, 500)
